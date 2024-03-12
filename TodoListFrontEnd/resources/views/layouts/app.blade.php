@@ -8,6 +8,7 @@
     @yield('tittle')
   </tittle>
   <style>
+    @yield('css')
     footer{
         position: fixed;
         left: 0;
