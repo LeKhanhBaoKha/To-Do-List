@@ -51,32 +51,25 @@
               <div class="flex flex-shrink-0 items-center">
                 <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
               </div>
-              <div class="hidden sm:ml-6 sm:block">
-                <div class="flex space-x-4">
+              <div class="sm:ml-6 sm:block items-center">
+                <div class="flex space-x-4 ">
                   <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                  <a href="/public/index" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page" @if (auth()->check()==false)
-                    style="display:none;" @endif>
-
-                    @if (!auth()->check())
-
+                  @if (strpos(url()->current(), 'login'))
+                    <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checked your to-do list?</p>
+                  @else
+                    <a href="index" class="hover:bg-gray-700 hover:text-white text-gray-300 rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                    @if (strpos(url()->current(), 'index'))
+                    bg-gray-900 text-white
                     @else
-                        @if (auth()->user()->is_admin == 1)
+                    text-gray-300
+                    @endif
+                    " aria-current="page" >
+                        @if ($user == 1)
                             Hello Admin
                         @else
-                        To Do List {{ auth()->check() ? 'For ' . auth()->user()->name : ''}}</a>
+                            To Do List
                         @endif
-                    @endif
-
-                    <a href="index" class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                        @if (strpos(url()->current(), 'index'))
-                        bg-gray-900 text-white
-                        @else
-                        text-gray-300
-                        @endif
-
-                    ">To do list</a>
-
-                    {{-- @if (auth()->check()) --}}
+                    </a>
                     <a href="create" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
                         @if (strpos(url()->current(), 'create'))
                         bg-gray-900 text-white
@@ -84,32 +77,33 @@
                         text-gray-300
                         @endif
                     ">Create</a>
-                    {{-- @endif --}}
 
-                  {{-- check if the user is login or not --}}
-                  @if (Auth::check())
-                  {{-- if they are, change the log in button to log out --}}
-                  <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log out</a>
+                    {{-- check if the user is login or not --}}
 
-                  {{-- logout form --}}
-                    <form action="logout" method="post" class="hidden" id="logout-form">@csrf</form>
+                    @if ($is_loggedIn)
+                    {{-- if they are, change the log in button to log out --}}
+                    <a href="#" class="transition duration-300 ease-in-out text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log out</a>
 
-                  @else
-                    {{-- if they are not, keep the log in button --}}
-                    <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                        @if (strpos(url()->current(), 'login'))
-                        bg-gray-900 text-white
-                        @else
-                        text-gray-300
-                        @endif
-                    ">Login</a>
-                    <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                        @if (strpos(url()->current(), 'register'))
-                        bg-gray-900 text-white
-                        @else
-                        text-gray-300
-                        @endif
-                    ">Register</a>
+                    {{-- logout form --}}
+                        <form action="logout" method="post" class="hidden" id="logout-form">@csrf</form>
+
+                    @else
+                        {{-- if they are not, keep the log in button --}}
+                        <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                            @if (strpos(url()->current(), 'login'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif
+                        ">Login</a>
+                        <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                            @if (strpos(url()->current(), 'register'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif
+                        ">Register</a>
+                    @endif
                   @endif
                 </div>
               </div>

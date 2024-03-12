@@ -2,6 +2,10 @@
 @section('tittle')
 
 @endsection
+
+@php
+    $userinfo = $user
+@endphp
 @section('content')
   <form class="w-[600px] m-auto border-gray-500 border rounded px-8 pt-6 pb-8 mb-4" action="store" method="post">
     @csrf
@@ -43,9 +47,9 @@
       </div>
 
       <div class="flex items-center mb-6"
-      {{-- @if (auth()->user()->is_admin != 1) --}}
-      {{-- style="display:none;" --}}
-      {{-- @endif --}}
+      @if ($userinfo['is_admin'] == 0)
+      style="display:none;"
+      @endif
       >
         <div class="w-1/5">
           <label class="block text-gray-500 font-bold text-left " for="user_id">
@@ -54,8 +58,13 @@
         </div>
         <div class="w-4/5">
             <select name="user_id" id="user_id">
+                <option value="{{$userinfo['id']}}">{{$userinfo['name']}}</option>
                 @foreach ($data['users'] as $user)
-                <option value="{{$user['id']}}">{{$user['name']}}</option>
+                @if ($userinfo['name'] == $user['name'])
+                    @continue
+                @else
+                    <option value="{{$user['id']}}">{{$user['name']}}</option>
+                @endif
                 @endforeach
             </select>
         </div>

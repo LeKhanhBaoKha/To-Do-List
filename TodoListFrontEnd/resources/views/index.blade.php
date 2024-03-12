@@ -1,12 +1,17 @@
 @extends('layouts.app')
 @section('content')
+
+@php
+    $userinfo = $user;
+@endphp
 <table class="table-auto md:w-[1200px] m-auto">
     <thead>
       <tr>
-        <th class="px-4 py-2">Todo name</th>
+        <th class="px-4 py-2">Todo name of {{$user['is_admin'] ==1 ? 'Everyone' : $user['name']}}</th>
         <th class="px-4 py-2">Project name</th>
         <th class="px-4 py-2">state</th>
-        <th class="px-4 py-2">Belongs to</th>
+
+        <th class="px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
 
         {{-- @if(auth()->check()) --}}
         <th class="px-4 py-2">function</th>
@@ -27,14 +32,47 @@
           <p class="font-bold text-green-600">Complete</p>
       @endif
       </td>
-
-      <td class="border px-4 py-2">
+      <td class="border px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">
           {{$todo['user']['name']}}
       </td>
 
       {{-- @if (auth()->check()) --}}
       <td class="border px-4 py-2 flex justify-center">
-          <button class="{{$todo['id']}}-modal font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-400 text-white mr-2 " id="dt-button" onclick="replyClick(this.classList[0])">
+
+        @if($todo['state'] == 0)
+        <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 hover:text-green-500 text-white mr-2"
+        onclick="event.preventDefault(); document.getElementById('complete_form{{$todo['id']}}').submit()">
+            <x-fas-check class="w-[30px] h-[34px]"/>
+        </button>
+
+        <div>
+            <form class="w-[600px] m-auto px-4 py-4 hidden" action="update" method="post" id="complete_form{{$todo['id']}}">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="id" value={{$todo['id']}} style="display:none">
+                <input type="hidden" name="state" value="1" style="display:none">
+            </form>
+        </div>
+        @else
+            <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 hover:text-red-500 text-white mr-2 "
+            onclick="event.preventDefault(); document.getElementById('incomplete_form{{$todo['id']}}').submit()">
+                <x-fas-x class="w-[30px] h-[34px]"/>
+            </button>
+
+            <div>
+                <form class="w-[600px] m-auto px-4 py-4 hidden" action="update" method="post" id="incomplete_form{{$todo['id']}}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="id" value={{$todo['id']}} style="display:none">
+                    <input type="hidden" name="state" value="0" style="display:none">
+                </form>
+            </div>
+        @endif
+
+
+
+
+          <button class="{{$todo['id']}}-modal font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white mr-2 " id="dt-button" onclick="replyClick(this.classList[0])">
               <label for="{{$todo['id']}}-modal" class="cursor-pointer rounded">Details</label>
           </button>
 
@@ -60,7 +98,7 @@
             </label>
         </div>
 
-          <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-400 text-white mr-2">
+          <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white mr-2">
               <label for="{{$todo['id']}}-editmodal" class="cursor-pointer rounded">Edit</label>
           </button>
 
@@ -181,7 +219,7 @@
 
 
 
-            <button class="{{$todo['id']}}-delmodal font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-400 text-white" id="del-button" onclick="getDelClass(this.classList[0])">
+            <button class="{{$todo['id']}}-delmodal font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white" id="del-button" onclick="getDelClass(this.classList[0])">
                 <label for="{{$todo['id']}}-delmodal" class="cursor-pointer rounded">Delete</label>
             </button>
 

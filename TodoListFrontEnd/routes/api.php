@@ -15,12 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['middleware' => ['web']], function () {
-    Route::get('index', [TodoController::class, 'index'])->name('index')->middleware(['web']);
+    Route::get('index', [TodoController::class, 'index'])->name('index');
     Route::delete('delete/{id}', [TodoController::class, 'destroy'])->name('destroy');
     Route::get('create', [TodoController::class, 'create']);
     Route::post('store', [TodoController::class, 'store']);
@@ -28,8 +24,8 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('login', [TodoController::class, 'loginPage']);
     Route::post('login', [TodoController::class, 'login']);
+    Route::post('logout', [TodoController::class, 'logout']);
     Route::get('register', [TodoController::class, 'registerPage']);
-
     Route::post('register', [TodoController::class, 'register']);
 });
 

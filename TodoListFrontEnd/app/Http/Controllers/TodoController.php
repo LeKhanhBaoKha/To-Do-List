@@ -4,30 +4,42 @@ namespace App\Http\Controllers;
 
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class TodoController extends Controller
 {
     public function index(){
         $token = session('token');
+        $user = session('user');
         if($token == null){
             return 'token is null';
         }
-
+        if($user == null){
+            return 'user is null';
+        }
+        $is_loggedIn = true;
         $todos = Http::withToken($token)->get('http://localhost:8008/api/serve/index')->json();
         $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
         // return $todos;
-        return view('index', compact('todos', 'data') );
+        return view('index', compact('todos', 'data', 'is_loggedIn', 'user'));
     }
 
     public function details(Request $request){
-        $todo = Http::get(`http://localhost:8008/api/serve/{$request->id}`)->json();
+        $token = session('token');
+        if($token == null){
+            return 'token is null';
+        }
+        $todo = Http::withToken($token)->get(`http://localhost:8008/api/serve/{$request->id}`)->json();
         return $todo;
     }
 
     public function destroy($id){
-        $response = Http::post('http://localhost:8008/api/serve/delete',[
+        $token = session('token');
+        if($token == null){
+            return 'token is null';
+        }
+        $response = Http::withToken($token)->post('http://localhost:8008/api/serve/delete',[
             'id' => $id,
             '_method' => 'delete'
         ]);
@@ -35,9 +47,15 @@ class TodoController extends Controller
     }
 
     public function create(){
-        $data = Http::get('http://localhost:8008/api/serve/createData')->json();
+        $token = session('token');
+        $user = session('user');
+        if($token == null){
+            return 'token is null';
+        }
+        $is_loggedIn = true;
+        $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
         // return $data['projects'][0];
-        return view('create', compact('data'));
+        return view('create', compact('data', 'is_loggedIn', 'user'));
     }
 
     public function store(){
@@ -47,13 +65,18 @@ class TodoController extends Controller
                 'description' =>['required'],
                 'project_id' =>['required'],
                 'user_id' =>['required'],
-
             ]);
         }catch(ValidationException $e){
 
         }
+
+        $token = session('token');
+        if($token == null){
+            return 'token is null';
+        }
+
         $data = request()->all();
-        Http::post('http://localhost:8008/api/serve/store',[
+        Http::withToken($token)->post('http://localhost:8008/api/serve/store',[
             'name' => $data['name'],
             'description' => $data['description'],
             'project_id' => $data['project_id'],
@@ -70,9 +93,14 @@ class TodoController extends Controller
         }catch(ValidationException $e){
 
         }
+        $token = session('token');
+        if($token == null){
+            return 'token is null';
+        }
         $data=request()->all();
         $data['_method'] = 'patch';
-        Http::patch('http://localhost:8008/api/serve/update',$data);
+        unset($data['_token']);
+        Http::withToken($token)->patch('http://localhost:8008/api/serve/update',$data);
         return redirect('api/index');
     }
 
@@ -97,7 +125,6 @@ class TodoController extends Controller
 
         $data = request()->all();
         Http::post('http://localhost:8008/api/serve/register', $data);
-        return $data;
         return redirect('api/login');
     }
 
@@ -120,10 +147,24 @@ class TodoController extends Controller
         if($response['status'] == 'success'){
             $token = $response->json()['authorisation']['token'];
             session(['token' => $token ]);
+            $user = $response->json()['user'];
+            session(['user' => $user]);
             return redirect('api/index');
         }
         else{
             return redirect()->back()->withErrors(['login' => 'Login failed. Please try again.']);
         }
+    }
+
+    public function logout(){
+        $token = session('token');
+        $user = null;
+        if($token == null){
+            return 'token is null';
+        }
+        $is_loggedIn = false;
+
+        Http::withToken($token)->post('http://localhost:8008/api/logout');
+        return redirect('api/login');
     }
 }
