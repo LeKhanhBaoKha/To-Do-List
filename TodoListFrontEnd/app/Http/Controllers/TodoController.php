@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class TodoController extends Controller
 {
     public function index(){
+
+        // handling token and user authentication
         $token = session('token');
         $user = session('user');
         if($token == null){
@@ -19,10 +20,41 @@ class TodoController extends Controller
             return 'user is null';
         }
         $is_loggedIn = true;
-        $todos = Http::withToken($token)->get('http://localhost:8008/api/serve/index')->json();
-        $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
+        // end
+
+
+        $todosWithPage = Http::withToken($token)->get('http://localhost:8008/api/serve/index')->json();
         // return $todos;
-        return view('index', compact('todos', 'data', 'is_loggedIn', 'user'));
+        $todos = $todosWithPage['data'];
+        $paginationLinks = $todosWithPage['links'];
+        $numberOfPage = $todosWithPage['last_page'];
+
+        $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
+        return view('index', compact('todos', 'paginationLinks','numberOfPage', 'data', 'is_loggedIn', 'user'));
+    }
+
+    public function indexPage(Request $request){
+        // handling token and user authentication
+        $token = session('token');
+        $user = session('user');
+        if($token == null){
+            return 'token is null';
+        }
+        if($user == null){
+            return 'user is null';
+        }
+        $is_loggedIn = true;
+        // end
+
+        // the link to the page that the user has just clicked.
+        $link = key($request->all()).'='.implode($request->all());
+        //fetch the data for the page the user clicked
+        $todosWithPage = Http::withToken($token)->get($link)->json();
+        $todos = $todosWithPage['data'];
+        $paginationLinks = $todosWithPage['links'];
+        $numberOfPage = $todosWithPage['last_page'];
+        $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
+        return view('index', compact('todos', 'paginationLinks', 'numberOfPage',  'data', 'is_loggedIn', 'user'));
     }
 
     public function details(Request $request){

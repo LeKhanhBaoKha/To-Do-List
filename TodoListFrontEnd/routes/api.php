@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['web']], function () {
+    Route::get('indexPage', [TodoController::class, 'indexPage']);
     Route::get('index', [TodoController::class, 'index'])->name('index');
     Route::delete('delete/{id}', [TodoController::class, 'destroy'])->name('destroy');
     Route::get('create', [TodoController::class, 'create']);

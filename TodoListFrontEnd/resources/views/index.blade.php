@@ -47,12 +47,13 @@
 @php
     $userinfo = $user;
 @endphp
-<table class="table-auto md:w-[1200px] m-auto">
+@if ($todos != null)
+<table class="table-auto md:w-[1200px] m-auto mb-5">
     <thead>
       <tr>
-        <th class="px-4 py-2 bg-gray-200 rounded-l-lg">Todo name of {{$user['is_admin'] ==1 ? 'Everyone' : $user['name']}}</th>
+        <th class="px-4 py-2 bg-gray-200 rounded-l-lg" >Todo name of {{$user['is_admin'] ==1 ? 'Everyone' : $user['name']}}</th>
         <th class="px-4 py-2 bg-gray-200">Project name</th>
-        <th class="px-4 py-2 bg-gray-200">state</th>
+        <th class="px-4 py-2 bg-gray-200">state </th>
 
         <th class="px-4 py-2 bg-gray-200 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
 
@@ -63,23 +64,23 @@
     </tr>
     </thead>
     <tbody>
-    @if ($todos != null)
+
     @foreach ($todos as $todo)
     <tr>
         {{-- name --}}
-      <td class="box-border border-b-2 border-gray-150  px-4 py-2 rounded-full ">{{$todo["name"]}}</td>
+      <td class="box-border border-b-2 border-gray-150  px-4 py-2 rounded-full text-justify">{{$todo["name"]}}</td>
       {{-- project name --}}
-      <td class="box-border border-b-2 border-gray-150 px-4 py-2 ">{{$todo['project']['name']}}</td>
+      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">{{$todo['project']['name']}}</td>
       {{-- state name --}}
-      <td class="box-border border-b-2 border-gray-150 px-4 py-2 ">
+      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-center	">
       @if($todo['state'] == 0)
-          <p class="font-bold text-blue-600">In process</p>
+          <p class="font-bold text-blue-600 bg-blue-50 rounded-lg">In process</p>
       @else
-          <p class="font-bold text-green-600">Complete</p>
+          <p class="font-bold text-green-600 bg-green-50 rounded-lg">Complete</p>
       @endif
       </td>
       {{-- belongs to --}}
-      <td class="box-border border-b-2 border-gray-150 px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}} ">
+      <td class="box-border border-b-2 border-gray-150 px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}} text-justify">
           {{$todo['user']['name']}}
       </td>
 
@@ -87,7 +88,7 @@
       <td class="box-border border-b-2 border-gray-150 px-4 py-2 ">
         <div class="flex justify-center ">
             @if($todo['state'] == 0)
-            <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 hover:text-green-500 text-white mr-2"
+            <button class="font-bold py-1 px-2 rounded bg-purple-500  hover:text-green-500 text-white mr-2 transition duration-[0.5s] ease-in-out"
             onclick="event.preventDefault(); document.getElementById('complete_form{{$todo['id']}}').submit()">
                 <x-fas-check class="w-[30px] h-[34px]"/>
             </button>
@@ -101,7 +102,7 @@
                 </form>
             </div>
             @else
-                <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 hover:text-red-500 text-white mr-2 "
+                <button class="font-bold py-1 px-2 rounded bg-purple-500  hover:text-red-500 text-white mr-2 "
                 onclick="event.preventDefault(); document.getElementById('incomplete_form{{$todo['id']}}').submit()">
                     <x-fas-x class="w-[30px] h-[34px]"/>
                 </button>
@@ -119,7 +120,7 @@
 
 
 
-              <button class="{{$todo['id']}}-modal font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white mr-2 details-button" id="dt-button" >
+              <button class="{{$todo['id']}}-modal font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 details-button" id="dt-button" >
                   <label for="{{$todo['id']}}-modal" class="cursor-pointer rounded"><x-fas-maximize class="w-[30px] h-[34px] details"/></label>
               </button>
 
@@ -145,7 +146,7 @@
                 </label>
             </div>
 
-              <button class="font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white mr-2 editButton">
+              <button class="font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 editButton">
                   <label for="{{$todo['id']}}-editmodal" class="cursor-pointer rounded"><x-fas-gear class="w-[30px] h-[34px] gear"/></label>
               </button>
 
@@ -266,8 +267,8 @@
 
 
 
-                <button class="{{$todo['id']}}-delmodal font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white" id="del-button" onclick="getDelClass(this.classList[0])">
-                    <label for="{{$todo['id']}}-delmodal" class="cursor-pointer rounded"><x-fas-trash-can class="w-[30px] h-[34px]"/></label>
+                <button class="{{$todo['id']}}-delmodal font-bold py-1 px-2 rounded bg-red-500 hover:bg-red-50 hover:text-red-500 text-white transition duration-[0.5s] ease-in-out" id="del-button" onclick="getDelClass(this.classList[0])">
+                    <label for="{{$todo['id']}}-delmodal" class="cursor-pointer rounded"><x-fas-trash-can class="w-[30px] h-[34px] "/></label>
                 </button>
 
 
@@ -299,13 +300,18 @@
     </tr>
     @endforeach
 
+
     @else
-    <p>Nothing to do, let's chill</p>
+    <div class="container mx-auto flex items-center justify-center h-screen">
+        <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Nothing to do, let's chill</p>
+    </div>
     @endif
 
     </tbody>
   </table>
-
+  <div class="container mx-[20%]">
+    @include('pagination')
+    </div>
     <script>
     var delModal
     function getDelClass(classList){

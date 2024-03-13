@@ -23,11 +23,11 @@ class ApiTodoController extends Controller
         if(auth()->check())
         {
             if(auth()->user()->is_admin == 1){
-                $todos = Todo::with('project', 'user')->get();
+                $todos = Todo::with('project', 'user')->paginate(10);
             }
             else{
                 $userId = auth()->user()->id;
-                $todos = Todo::where('user_id', $userId)->with('user', 'project')->get();
+                $todos = Todo::where('user_id', $userId)->with('user', 'project')->paginate(10);
             }
         }
         else{

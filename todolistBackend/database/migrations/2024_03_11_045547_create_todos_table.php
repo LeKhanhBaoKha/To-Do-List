@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name'); //I added the name column
             $table->text('description'); //I added the description column
             $table->boolean('state')->default(0);
-            $table->unsignedInteger('project_id');
-            $table->unsignedInteger('user_id');
+            $table->bigInteger ('project_id');
+            $table->bigInteger ('user_id');
         });
     }
 
