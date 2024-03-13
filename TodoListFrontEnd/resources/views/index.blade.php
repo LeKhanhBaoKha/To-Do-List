@@ -48,6 +48,8 @@
     $userinfo = $user;
 @endphp
 @if ($todos != null)
+
+{{-- todotable --}}
 <table class="table-auto md:w-[1200px] m-auto mb-5">
     <thead>
       <tr>
@@ -84,9 +86,12 @@
           {{$todo['user']['name']}}
       </td>
 
+
       {{-- function --}}
       <td class="box-border border-b-2 border-gray-150 px-4 py-2 ">
         <div class="flex justify-center ">
+
+            {{-- check button --}}
             @if($todo['state'] == 0)
             <button class="font-bold py-1 px-2 rounded bg-purple-500  hover:text-green-500 text-white mr-2 transition duration-[0.5s] ease-in-out"
             onclick="event.preventDefault(); document.getElementById('complete_form{{$todo['id']}}').submit()">
@@ -116,13 +121,14 @@
                     </form>
                 </div>
             @endif
+            {{-- end check button --}}
 
 
-
-
+                {{-- details button --}}
               <button class="{{$todo['id']}}-modal font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 details-button" id="dt-button" >
                   <label for="{{$todo['id']}}-modal" class="cursor-pointer rounded"><x-fas-maximize class="w-[30px] h-[34px] details"/></label>
               </button>
+                {{-- end details button --}}
 
             {{-- details modal form --}}
             <div class="">
@@ -146,9 +152,11 @@
                 </label>
             </div>
 
+                {{-- edit button --}}
               <button class="font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 editButton">
                   <label for="{{$todo['id']}}-editmodal" class="cursor-pointer rounded"><x-fas-gear class="w-[30px] h-[34px] gear"/></label>
               </button>
+              {{-- end edit button --}}
 
                {{-- edit modal form --}}
                 <div class="">
@@ -203,9 +211,9 @@
                               </div>
 
                               <div class="flex items-center mb-6"
-                              {{-- @if (auth()->user()->is_admin != 1) --}}
-                              {{-- style="display:none;" --}}
-                              {{-- @endif --}}
+                              @if ($user['is_admin'] != 1)
+                              style="display:none;"
+                              @endif
                               >
                                 <div class="w-1/5">
                                   <label class="block text-gray-500 font-bold text-left " for="user_id">
@@ -214,7 +222,7 @@
                                 </div>
                                 <div class="w-4/5">
                                     <select name="user_id" id="user_id">
-                                        <option value="{{$todo['user']['id']}}">{{$todo['user']['name']}}</option>
+                                        <option value="{{$todo['user']['id']}}" selected>{{$todo['user']['name']}}</option>
                                         @foreach ($data['users'] as $user)
                                             @if ($todo['user']['name'] == $user['name'])
                                                 @continue
@@ -266,11 +274,11 @@
                 </div>
 
 
-
+                {{-- delete button --}}
                 <button class="{{$todo['id']}}-delmodal font-bold py-1 px-2 rounded bg-red-500 hover:bg-red-50 hover:text-red-500 text-white transition duration-[0.5s] ease-in-out" id="del-button" onclick="getDelClass(this.classList[0])">
                     <label for="{{$todo['id']}}-delmodal" class="cursor-pointer rounded"><x-fas-trash-can class="w-[30px] h-[34px] "/></label>
                 </button>
-
+                {{-- end delete button --}}
 
             {{-- del modal form --}}
                 <div class="">
@@ -296,7 +304,7 @@
                 </div>
         </div>
       </td>
-      {{-- @endif --}}
+      {{-- end of functions --}}
     </tr>
     @endforeach
 
@@ -309,9 +317,18 @@
 
     </tbody>
   </table>
+  {{-- end of todo table --}}
+
   <div class="container mx-[20%]">
-    @include('pagination')
-    </div>
+    @include('TestPagination')
+  </div>
+
+    {{-- pagination --}}
+    {{-- <div class="container mx-[20%]">
+        @include('pagination')
+    </div> --}}
+    {{-- end of pagination --}}
+
     <script>
     var delModal
     function getDelClass(classList){

@@ -30,7 +30,7 @@ class TodoController extends Controller
         $numberOfPage = $todosWithPage['last_page'];
 
         $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
-        return view('index', compact('todos', 'paginationLinks','numberOfPage', 'data', 'is_loggedIn', 'user'));
+        return view('index', compact('todos', 'paginationLinks','numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
     }
 
     public function indexPage(Request $request){
@@ -54,7 +54,7 @@ class TodoController extends Controller
         $paginationLinks = $todosWithPage['links'];
         $numberOfPage = $todosWithPage['last_page'];
         $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
-        return view('index', compact('todos', 'paginationLinks', 'numberOfPage',  'data', 'is_loggedIn', 'user'));
+        return view('index', compact('todos', 'paginationLinks', 'numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
     }
 
     public function details(Request $request){
@@ -133,7 +133,7 @@ class TodoController extends Controller
         $data['_method'] = 'patch';
         unset($data['_token']);
         Http::withToken($token)->patch('http://localhost:8008/api/serve/update',$data);
-        return redirect('api/index');
+        return redirect()->back();
     }
 
     public function loginPage(){

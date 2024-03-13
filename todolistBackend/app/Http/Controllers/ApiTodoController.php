@@ -23,7 +23,7 @@ class ApiTodoController extends Controller
         if(auth()->check())
         {
             if(auth()->user()->is_admin == 1){
-                $todos = Todo::with('project', 'user')->paginate(10);
+                $todos = Todo::with('project', 'user')->Paginate(10);
             }
             else{
                 $userId = auth()->user()->id;
@@ -31,7 +31,8 @@ class ApiTodoController extends Controller
             }
         }
         else{
-            $todos = Todo::with('project', 'user')->get();
+            return response()->json(['status' => 'error',
+            'message' => 'Unauthorized',], 401);
         }
         return response()->json($todos);
     }
