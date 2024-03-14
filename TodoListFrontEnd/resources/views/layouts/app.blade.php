@@ -19,9 +19,18 @@
     button{
         transition: 0.5s;
     }
+    .roboto-regular {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    }
   </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
 </head>
-<body>
+<body class="roboto-regular">
     <nav class="bg-gray-800 mb-5">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div class="relative flex h-16 items-center justify-between">
@@ -57,6 +66,29 @@
                   <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                   @if (strpos(url()->current(), 'login'))
                     <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checked your to-do list?</p>
+                    <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                            @if (strpos(url()->current(), 'register'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif
+                        ">Register</a>
+                    @elseif (strpos(url()->current(), 'register'))
+                    <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checked your to-do list?</p>
+                    <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                            @if (strpos(url()->current(), 'register'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif
+                        ">Register</a>
+                        <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                            @if (strpos(url()->current(), 'login'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif
+                        ">Login</a>
                   @else
                     <a href="index" class="hover:bg-gray-700 hover:text-white text-gray-300 rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
                     @if (strpos(url()->current(), 'index'))
@@ -97,13 +129,7 @@
                             text-gray-300
                             @endif
                         ">Login</a>
-                        <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'register'))
-                            bg-gray-900 text-white
-                            @else
-                            text-gray-300
-                            @endif
-                        ">Register</a>
+
                     @endif
                   @endif
                 </div>

@@ -34,7 +34,7 @@
     <button class="bg-purple-500 hover:bg-purple-400  focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
       Sign up
     </button>
-    <a class="inline-block align-baseline font-bold text-sm text-purple-500 hover:text-purple-800" href="/login">
+    <a class="inline-block align-baseline font-bold text-sm text-purple-500 hover:text-purple-800" href="login">
       Already have an account? Sign in
     </a>
   </div>

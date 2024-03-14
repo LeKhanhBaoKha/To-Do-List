@@ -8,7 +8,9 @@
     $pageButtonsToShow = 3;
 
     $startPage = max(1, $currentPage - $pageButtonsToShow);
+    // var_dump($startPage);
     $endPage = min($totalTodos, $currentPage + $pageButtonsToShow);
+    // var_dump($endPage);
 
     if ($currentPage == $totalPages - 2) {
         $endPage = $totalPages;

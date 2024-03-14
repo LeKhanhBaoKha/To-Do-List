@@ -31,6 +31,7 @@
       </div>
     </div>
 
+
     <div class="flex items-center mb-6">
         <div class="w-1/5">
           <label class="block text-gray-500 font-bold text-left " for="project_id">
@@ -67,6 +68,18 @@
                 @endif
                 @endforeach
             </select>
+        </div>
+      </div>
+
+
+    <div class="flex items-center mb-6">
+        <div class="w-1/5">
+          <label class="block text-gray-500 font-bold text-left" for="description">
+            Deadline:
+          </label>
+        </div>
+        <div class="w-4/5">
+          <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="deadline" type="datetime-local" name="deadline" placeholder="">
         </div>
       </div>
 

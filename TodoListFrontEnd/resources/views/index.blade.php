@@ -59,6 +59,8 @@
 
         <th class="px-4 py-2 bg-gray-200 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
 
+        <th class="px-4 py-2 bg-gray-200">Time left</th>
+
         {{-- @if(auth()->check()) --}}
         <th class="px-4 py-2 bg-gray-200 rounded-r-lg">function</th>
         {{-- @endif --}}
@@ -86,6 +88,22 @@
           {{$todo['user']['name']}}
       </td>
 
+      {{-- timeleft --}}
+      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">
+        @if ($todo['timeleft']['days'] == 0 && $todo['timeleft']['hours'] == 0 && $todo['timeleft']['minutes'] == 0)
+            <p class="font-bold text-red-600 bg-red-50 rounded-lg text-center w-[80px] m-auto">Time's up</p>
+        @else
+            @if ($todo['timeleft']['days'] != 0)
+            {{$todo['timeleft']['days']}} days
+            @endif
+            @if ($todo['timeleft']['hours'] != 0)
+                {{$todo['timeleft']['hours']}} hours
+            @endif
+            @if ($todo['timeleft']['minutes'] != 0 )
+                {{$todo['timeleft']['minutes']}} minutes
+            @endif
+        @endif
+        </td>
 
       {{-- function --}}
       <td class="box-border border-b-2 border-gray-150 px-4 py-2 ">
@@ -147,6 +165,9 @@
                     </div>
                     <p class="py-1">Project: {{$todo['project']['name']}}</p>
                     <p class="py-1">Belongs to: {{$todo['user']['name']}}</p>
+                    <p class="py-1">Starting date: {{ \Carbon\Carbon::parse($todo['created_at'])->format('Y-m-d H:i:s') }}</p>
+                    {{-- <p class="py-1">{{$todo['created_at']}}</p> --}}
+                    <p class="py-1">Deadline: {{$todo['deadline']}}</p>
 
                 </label>
                 </label>
@@ -231,6 +252,17 @@
                                             @endif
                                         @endforeach
                                     </select>
+                                </div>
+                              </div>
+
+                              <div class="flex items-center mb-6">
+                                <div class="w-1/5">
+                                  <label class="block text-gray-500 font-bold text-left" for="deadline">
+                                    Deadline:
+                                  </label>
+                                </div>
+                                <div class="w-4/5">
+                                  <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="deadline" type="datetime-local" name="deadline" value="{{$todo['deadline']}}">
                                 </div>
                               </div>
 

@@ -48,6 +48,7 @@ class ApiTodoController extends Controller
                 'description' => ['required'],
                 'project_id' => ['required'],
                 'user_id' => ['required'],
+                'deadline' => ['required']
             ]);
         }catch(ValidationException $e){
 
@@ -60,6 +61,7 @@ class ApiTodoController extends Controller
         $todo->description = $data['description'];
         $todo->project_id =$data['project_id'];
         $todo->user_id = $data['user_id'];
+        $todo->deadline = $data['deadline'];
         $todo->save();
 
         return response()->json($data['name']. ' is added');
@@ -110,6 +112,7 @@ class ApiTodoController extends Controller
             isset($data['state'])? $todo->state = $data['state']:$todo->state=$todo->state;
             isset($data['project_id'])? $todo->project_id = $data['project_id']: $todo->project_id=$todo->project_id;
             isset($data['user_id'])? $todo->user_id =$data['user_id']:$todo->user_id=$todo->user_id;
+            isset($data['deadline'])? $todo->deadline =$data['deadline']:$todo->deadline=$todo->deadline;
             $todo->save();
             return response($todo);
         }

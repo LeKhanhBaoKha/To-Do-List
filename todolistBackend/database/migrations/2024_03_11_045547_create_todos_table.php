@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name'); //I added the name column
             $table->text('description'); //I added the description column
             $table->boolean('state')->default(0);
             $table->bigInteger ('project_id');
             $table->bigInteger ('user_id');
+            $table->datetime('deadline');
+            $table->timestamps();
         });
     }
 

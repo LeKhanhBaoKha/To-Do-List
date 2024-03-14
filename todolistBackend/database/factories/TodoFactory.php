@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +22,9 @@ class TodoFactory extends Factory
             'description' => fake()->text(),
             'state' => rand(0,1),
             'project_id' => rand(1,9),
-            'user_id' => rand(6,11)
+            'user_id' => rand(1,11),
+            'deadline' =>  $this->faker->dateTimeBetween('now', '+1 year'),
+            'created_at' =>  Carbon::now()->subDay(),
         ];
     }
 }
