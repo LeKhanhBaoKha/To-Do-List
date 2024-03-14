@@ -50,11 +50,11 @@
 @if ($todos != null)
 
 {{-- todotable --}}
-<table class="table-auto md:w-[1200px] m-auto mb-5">
+<table class="table-auto lg:w-[1200px] md:w-[800px] m-auto mb-5">
     <thead>
       <tr>
         <th class="px-4 py-2 bg-gray-200 rounded-l-lg" >Todo name of {{$user['is_admin'] ==1 ? 'Everyone' : $user['name']}}</th>
-        <th class="px-4 py-2 bg-gray-200">Project name</th>
+        <th class="px-4 py-2 bg-gray-200 hidden lg:table-cell">Project name</th>
         <th class="px-4 py-2 bg-gray-200">state </th>
 
         <th class="px-4 py-2 bg-gray-200 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
@@ -70,11 +70,11 @@
     <tbody>
 
     @foreach ($todos as $todo)
-    <tr>
+    <tr class="hover:bg-green-50 transition duration-300 ease-in-out">
         {{-- name --}}
-      <td class="box-border border-b-2 border-gray-150  px-4 py-2 rounded-full text-justify">{{$todo["name"]}}</td>
+      <td class="box-border border-b-2 border-gray-150  px-4 py-2 text-justify">{{$todo["name"]}}</td>
       {{-- project name --}}
-      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">{{$todo['project']['name']}}</td>
+      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify hidden lg:table-cell ">{{$todo['project']['name']}}</td>
       {{-- state name --}}
       <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-center	">
       @if($todo['state'] == 0)
@@ -89,7 +89,7 @@
       </td>
 
       {{-- timeleft --}}
-      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">
+      <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-left">
         @if ($todo['timeleft']['days'] == 0 && $todo['timeleft']['hours'] == 0 && $todo['timeleft']['minutes'] == 0)
             <p class="font-bold text-red-600 bg-red-50 rounded-lg text-center w-[80px] m-auto">Time's up</p>
         @else
@@ -113,7 +113,7 @@
             @if($todo['state'] == 0)
             <button class="font-bold py-1 px-2 rounded bg-purple-500  hover:text-green-500 text-white mr-2 transition duration-[0.5s] ease-in-out"
             onclick="event.preventDefault(); document.getElementById('complete_form{{$todo['id']}}').submit()">
-                <x-fas-check class="w-[30px] h-[34px]"/>
+                <x-fas-check class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] "/>
             </button>
 
             <div>
@@ -127,7 +127,7 @@
             @else
                 <button class="font-bold py-1 px-2 rounded bg-purple-500  hover:text-red-500 text-white mr-2 "
                 onclick="event.preventDefault(); document.getElementById('incomplete_form{{$todo['id']}}').submit()">
-                    <x-fas-x class="w-[30px] h-[34px]"/>
+                    <x-fas-x class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px]"/>
                 </button>
 
                 <div>
@@ -144,12 +144,12 @@
 
                 {{-- details button --}}
               <button class="{{$todo['id']}}-modal font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 details-button" id="dt-button" >
-                  <label for="{{$todo['id']}}-modal" class="cursor-pointer rounded"><x-fas-maximize class="w-[30px] h-[34px] details"/></label>
+                  <label for="{{$todo['id']}}-modal" class="cursor-pointer rounded"><x-fas-maximize class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] details"/></label>
               </button>
                 {{-- end details button --}}
 
             {{-- details modal form --}}
-            <div class="">
+            <div class="z-10">
                 <input type="checkbox" id="{{$todo['id']}}-modal" class="peer fixed appearance-none opacity-0" />
                 <label for="{{$todo['id']}}-modal" class="pointer-events-none invisible fixed inset-0 flex cursor-pointer items-center justify-center overflow-hidden overscroll-contain bg-slate-700/30 opacity-0 transition-all duration-[0.5s] ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100">
                 <label class="max-h-[calc(100vh - 5em)] scale-99 h-fit max-w-lg overflow-auto overscroll-contain rounded-md bg-white p-6 text-black shadow-2xl transition" for="">
@@ -168,19 +168,18 @@
                     <p class="py-1">Starting date: {{ \Carbon\Carbon::parse($todo['created_at'])->format('Y-m-d H:i:s') }}</p>
                     {{-- <p class="py-1">{{$todo['created_at']}}</p> --}}
                     <p class="py-1">Deadline: {{$todo['deadline']}}</p>
-
                 </label>
                 </label>
             </div>
 
                 {{-- edit button --}}
               <button class="font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 editButton">
-                  <label for="{{$todo['id']}}-editmodal" class="cursor-pointer rounded"><x-fas-gear class="w-[30px] h-[34px] gear"/></label>
+                  <label for="{{$todo['id']}}-editmodal" class="cursor-pointer rounded"><x-fas-gear class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] gear"/></label>
               </button>
               {{-- end edit button --}}
 
                {{-- edit modal form --}}
-                <div class="">
+                <div class="z-10">
                     <input type="checkbox" id="{{$todo['id']}}-editmodal" class="peer fixed appearance-none opacity-0" />
                     <label for="{{$todo['id']}}-editmodal" class="pointer-events-none invisible fixed inset-0 flex cursor-pointer items-center justify-center overflow-hidden overscroll-contain bg-slate-700/30 opacity-0 transition-all duration-[0.5s] ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100">
                     <label class="max-h-[calc(100vh - 5em)] scale-99 h-fit max-w-[80%] overflow-auto overscroll-contain rounded-md bg-white p-6 text-black shadow-2xl transition" for="">
@@ -308,7 +307,7 @@
 
                 {{-- delete button --}}
                 <button class="{{$todo['id']}}-delmodal font-bold py-1 px-2 rounded bg-red-500 hover:bg-red-50 hover:text-red-500 text-white transition duration-[0.5s] ease-in-out" id="del-button" onclick="getDelClass(this.classList[0])">
-                    <label for="{{$todo['id']}}-delmodal" class="cursor-pointer rounded"><x-fas-trash-can class="w-[30px] h-[34px] "/></label>
+                    <label for="{{$todo['id']}}-delmodal" class="cursor-pointer rounded"><x-fas-trash-can class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] "/></label>
                 </button>
                 {{-- end delete button --}}
 
@@ -351,7 +350,7 @@
   </table>
   {{-- end of todo table --}}
 
-  <div class="container mx-[20%]">
+  <div class="container mx-[20%] z-0">
     @include('TestPagination')
   </div>
 

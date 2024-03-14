@@ -8,22 +8,10 @@
     $pageButtonsToShow = 3;
 
     $startPage = max(1, $currentPage - $pageButtonsToShow);
-    // var_dump($startPage);
-    $endPage = min($totalTodos, $currentPage + $pageButtonsToShow);
-    // var_dump($endPage);
+    $endPage = min($totalPages, $currentPage + $pageButtonsToShow);
 
-    if ($currentPage == $totalPages - 2) {
-        $endPage = $totalPages;
-    }
-    elseif ($currentPage == $totalPages - 1) {
-        $endPage = $totalPages;
-    }
-    elseif ($currentPage == $totalPages) {
-        $endPage = $totalPages;
-    }
 @endphp
 
-<div>
     <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 
         @if ($currentPage > 1)
@@ -39,5 +27,4 @@
         @endif
 
     </nav>
-  </div>
 @endif
