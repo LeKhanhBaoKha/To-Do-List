@@ -18,15 +18,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::patch('serve/update', [ApiTodoController::class, 'update']);
 Route::get('serve/createData', [ApiTodoController::class, 'createData']);
-//index
+//
 Route::get('serve/index', [ApiTodoController::class, 'index']);
-//read
-Route::get('serve/{id}', [ApiTodoController::class, 'show']);
-//create
+//
 Route::post('serve/store', [ApiTodoController::class, 'store']);
-// delete
+//
 Route::delete('serve/delete', [ApiTodoController::class, 'destroy']);
-// update
+//
+Route::get('serve/completed', [ApiTodoController::class, 'completed']);
+//
+Route::get('serve/inprocess', [ApiTodoController::class, 'inProcess']);
 
 Route::controller(AuthController::class)->group(function(){
     Route::post('login', 'login' );

@@ -103,19 +103,22 @@
                             To Do List
                         @endif
                     </a>
-                    <a href="create" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+
+                    <a class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
                         @if (strpos(url()->current(), 'create'))
                         bg-gray-900 text-white
                         @else
                         text-gray-300
                         @endif
-                    ">Create</a>
+                    ">
+                    <label for="create" class="cursor-pointer rounded">Create</label>
+                    </a>
 
                     {{-- check if the user is login or not --}}
 
                     @if ($is_loggedIn)
                     {{-- if they are, change the log in button to log out --}}
-                    <a href="#" class="transition duration-300 ease-in-out text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log out</a>
+                    <a class="transition duration-300 ease-in-out text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log out</a>
 
                     {{-- logout form --}}
                         <form action="logout" method="post" class="hidden" id="logout-form">@csrf</form>
@@ -137,15 +140,7 @@
             </div>
 
         <!-- Mobile menu, show/hide based on menu state. -->
-        <div class="sm:hidden" id="mobile-menu">
-          <div class="space-y-1 px-2 pb-3 pt-2">
-            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a href="#" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
-            <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Calendar</a>
-          </div>
-        </div>
+            @include('create')
       </nav>
       <div>
         @yield('content')

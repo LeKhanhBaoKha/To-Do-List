@@ -29,6 +29,7 @@ class TodoController extends Controller
         $todos = null;
         $todoswithOutTimeLeft = $todosWithPage['data'];
 
+
         foreach($todoswithOutTimeLeft as $todo){
             $startDate = Carbon::now();
             $endDate = Carbon::parse($todo['deadline']);
@@ -77,10 +78,12 @@ class TodoController extends Controller
         $is_loggedIn = true;
         // end
 
+
         // the link to the page that the user has just clicked.
         $link = key($request->all()).'='.implode($request->all());
         //fetch the data for the page the user clicked
         $todosWithPage = Http::withToken($token)->get($link)->json();
+
 
         //adding timeleft to $todos
         $todoswithOutTimeLeft = $todosWithPage['data'];
@@ -114,9 +117,7 @@ class TodoController extends Controller
                 $todo['timeleft'] = $timeLeft;
                 $todos[] = $todo;
             }
-
         }
-
 
         $paginationLinks = $todosWithPage['links'];
         $numberOfPage = $todosWithPage['last_page'];
@@ -142,7 +143,7 @@ class TodoController extends Controller
             'id' => $id,
             '_method' => 'delete'
         ]);
-        return redirect('api/index');
+        return redirect()->back();
     }
 
     public function create(){
@@ -153,7 +154,6 @@ class TodoController extends Controller
         }
         $is_loggedIn = true;
         $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
-        // return $data['projects'][0];
         return view('create', compact('data', 'is_loggedIn', 'user'));
     }
 
@@ -183,7 +183,7 @@ class TodoController extends Controller
             'user_id' => $data['user_id'],
             'deadline' => $data['deadline']
         ]);
-        return redirect(('api/index'));
+        return redirect()->back();
     }
 
     public function update(){
@@ -267,5 +267,108 @@ class TodoController extends Controller
 
         Http::withToken($token)->post('http://localhost:8008/api/logout');
         return redirect('api/login');
+    }
+
+    public function completed(){
+        $token = session('token');
+        $user = session('user');
+        if($token == null){
+            return 'token is null';
+        }
+        if($user == null){
+            return 'user is null';
+        }
+        $is_loggedIn = true;
+        // end
+
+
+        $todosWithPage = Http::withToken($token)->get('http://localhost:8008/api/serve/completed')->json();
+        $todos = null;
+        $todoswithOutTimeLeft = $todosWithPage['data'];
+
+        foreach($todoswithOutTimeLeft as $todo){
+            $startDate = Carbon::now();
+            $endDate = Carbon::parse($todo['deadline']);
+            if($startDate->gt($endDate)){
+                $timeLeft = [ 'days' => 0, 'hours' => 0, 'minutes' => 0, 'totalMinutes' => 0 ];
+            }
+            else{
+                $totalMinutesLeft = $startDate->diffInMinutes($endDate);
+                if($totalMinutesLeft <= 0){
+                    $timeLeft = [ 'days' => 0, 'hours' => 0, 'totalMinutes' => 0, 'minutes' => 0];
+                }
+                elseif($totalMinutesLeft < 60){
+                    $timeLeft = [ 'days' => 0, 'hours' => 0, 'minutes' => $totalMinutesLeft, 'totalMinutes' => $totalMinutesLeft];
+                }
+                elseif($totalMinutesLeft < 1440){
+                    $timeLeft = [ 'days' => 0, 'hours' => floor($totalMinutesLeft/60), 'minutes' => fmod($totalMinutesLeft, 60),'totalMinutes' => $totalMinutesLeft];
+                }
+                else{
+                    $days = floor($totalMinutesLeft/1440);//1505/1440 = 1
+                    $minutesafterday = $totalMinutesLeft - $days*1440;//1505 - 1*1440 = 65
+                    $hours = floor($minutesafterday/60);// 65/60 = 1
+                    $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
+                    $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
+                }
+                $todo['timeleft'] = $timeLeft;
+                $todos[] = $todo;
+            }
+
+        }
+        $paginationLinks = $todosWithPage['links'];
+        $numberOfPage = $todosWithPage['last_page'];
+        $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
+        return view('index', compact('todos', 'paginationLinks','numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
+    }
+
+
+    public function inProcess(){
+        $token = session('token');
+        $user = session('user');
+        if($token == null){
+            return 'token is null';
+        }
+        if($user == null){
+            return 'user is null';
+        }
+        $is_loggedIn = true;
+        // end
+
+        $todosWithPage = Http::withToken($token)->get('http://localhost:8008/api/serve/inprocess')->json();
+        $todos = null;
+        $todoswithOutTimeLeft = $todosWithPage['data'];
+
+        foreach($todoswithOutTimeLeft as $todo){
+            $startDate = Carbon::now();
+            $endDate = Carbon::parse($todo['deadline']);
+            if($startDate->gt($endDate)){
+                $timeLeft = [ 'days' => 0, 'hours' => 0, 'minutes' => 0, 'totalMinutes' => 0 ];
+            }
+            else{
+                $totalMinutesLeft = $startDate->diffInMinutes($endDate);
+                if($totalMinutesLeft <= 0){
+                    $timeLeft = [ 'days' => 0, 'hours' => 0, 'totalMinutes' => 0, 'minutes' => 0];
+                }
+                elseif($totalMinutesLeft < 60){
+                    $timeLeft = [ 'days' => 0, 'hours' => 0, 'minutes' => $totalMinutesLeft, 'totalMinutes' => $totalMinutesLeft];
+                }
+                elseif($totalMinutesLeft < 1440){
+                    $timeLeft = [ 'days' => 0, 'hours' => floor($totalMinutesLeft/60), 'minutes' => fmod($totalMinutesLeft, 60),'totalMinutes' => $totalMinutesLeft];
+                }
+                else{
+                    $days = floor($totalMinutesLeft/1440);//1505/1440 = 1
+                    $minutesafterday = $totalMinutesLeft - $days*1440;//1505 - 1*1440 = 65
+                    $hours = floor($minutesafterday/60);// 65/60 = 1
+                    $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
+                    $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
+                }
+                $todo['timeleft'] = $timeLeft;
+                $todos[] = $todo;
+            }
+        }
+        $paginationLinks = $todosWithPage['links'];
+        $numberOfPage = $todosWithPage['last_page'];
+        $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
+        return view('index', compact('todos', 'paginationLinks','numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
     }
 }

@@ -135,4 +135,40 @@ class ApiTodoController extends Controller
             return response("todo doesn't exist");
         }
     }
+
+    public function completed(Request $request){
+        if(auth()->check())
+        {
+            if(auth()->user()->is_admin == 1){
+                $todos = Todo::with('project', 'user')->where('state', 1)->Paginate(10);
+            }
+            else{
+                $userId = auth()->user()->id;
+                $todos = Todo::where('user_id', $userId)->where('state', 1)->with('user', 'project')->paginate(10);
+            }
+        }
+        else{
+            return response()->json(['status' => 'error',
+            'message' => 'Unauthorized',], 401);
+        }
+        return response()->json($todos);
+    }
+
+    public function inProcess(Request $request){
+        if(auth()->check())
+        {
+            if(auth()->user()->is_admin == 1){
+                $todos = Todo::with('project', 'user')->where('state', 0)->Paginate(10);
+            }
+            else{
+                $userId = auth()->user()->id;
+                $todos = Todo::where('user_id', $userId)->where('state', 0)->with('user', 'project')->paginate(10);
+            }
+        }
+        else{
+            return response()->json(['status' => 'error',
+            'message' => 'Unauthorized',], 401);
+        }
+        return response()->json($todos);
+    }
 }
