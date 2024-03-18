@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Todo;
 use App\Models\User;
+use App\Notifications\CreateTodoSuccessful;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApiTodoController extends Controller
 {
@@ -63,7 +65,7 @@ class ApiTodoController extends Controller
         $todo->user_id = $data['user_id'];
         $todo->deadline = $data['deadline'];
         $todo->save();
-
+        User::find(Auth::user()->id)->notify(new CreateTodoSuccessful($todo));
         return response()->json($data['name']. ' is added');
     }
 
@@ -163,6 +165,31 @@ class ApiTodoController extends Controller
             else{
                 $userId = auth()->user()->id;
                 $todos = Todo::where('user_id', $userId)->where('state', 0)->with('user', 'project')->paginate(10);
+            }
+        }
+        else{
+            return response()->json(['status' => 'error',
+            'message' => 'Unauthorized',], 401);
+        }
+        return response()->json($todos);
+    }
+
+    public function markAsRead(){
+        Auth::user()->unreadNotifications->markAsRead();
+        return redirect()->json(['status'=> 'success',
+        'message' => 'Marked as unread',
+    ]);
+    }
+
+    public function getTodayTask(){
+        if(auth()->check())
+        {
+            if(auth()->user()->is_admin == 1){
+                $todos = Todo::with('project', 'user')->whereDate('deadline',now()->today())->Paginate(10);
+            }
+            else{
+                $userId = auth()->user()->id;
+                $todos = Todo::where('user_id', $userId)->whereDate('deadline',now()->today())->with('user', 'project')->paginate(10);
             }
         }
         else{

@@ -51,16 +51,19 @@
 
 {{-- todotable --}}
 <div class="w-full overflow-auto">
-    <div class="mx-[10%] max-w-sm my-4">
+    <div class="ml-[10%] max-w-sm my-4 inline-block">
         <label for="selection" class="mb-2 block text-sm font-medium text-gray-900">Select an option</label>
         <select id="selection" class="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onchange="navigateTo()">
-          <option selected>Choose a country</option>
+          <option selected>Choose state</option>
           <option value="http://127.0.0.1:8000/api/index">All</option>
           <option value="http://127.0.0.1:8000/api/completed">Completed</option>
           <option value="http://127.0.0.1:8000/api/inprocess">In process</option>
         </select>
     </div>
 
+    <div class="inline-block">
+        <a href="todaytask" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none ">Today's task</a>
+    </div>
 
     <table class="table-auto lg:w-[1500px] md:w-[800px] m-auto mb-5">
         <thead>

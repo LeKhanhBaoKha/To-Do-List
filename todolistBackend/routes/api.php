@@ -28,6 +28,9 @@ Route::delete('serve/delete', [ApiTodoController::class, 'destroy']);
 Route::get('serve/completed', [ApiTodoController::class, 'completed']);
 //
 Route::get('serve/inprocess', [ApiTodoController::class, 'inProcess']);
+//
+Route::get('serve/todaytask', [ApiTodoController::class, 'getTodayTask']);
+
 
 Route::controller(AuthController::class)->group(function(){
     Route::post('login', 'login' );
