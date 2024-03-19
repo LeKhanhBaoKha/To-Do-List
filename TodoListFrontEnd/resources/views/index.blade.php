@@ -188,6 +188,8 @@
   </div>
 
 
+  <x-notify::notify />
+  @notifyJs
     <script>
 
     //this javascript is to close the delete button

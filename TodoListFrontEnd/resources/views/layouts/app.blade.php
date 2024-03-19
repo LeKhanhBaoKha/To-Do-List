@@ -4,12 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @notifyCss
     @vite('resources/css/app.css')
     <tittle>
         @yield('tittle')
     </tittle>
+
     <style>
-        /* @yield('css') */
+        @yield('css')
         footer {
             position: fixed;
             left: 0;
@@ -32,6 +34,7 @@
          display: block;
         }
     </style>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link

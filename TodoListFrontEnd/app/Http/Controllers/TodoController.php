@@ -125,14 +125,14 @@ class TodoController extends Controller
         return view('index', compact('todos', 'paginationLinks', 'numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
     }
 
-    public function details(Request $request){
-        $token = session('token');
-        if($token == null){
-            return 'token is null';
-        }
-        $todo = Http::withToken($token)->get(`http://localhost:8008/api/serve/{$request->id}`)->json();
-        return $todo;
-    }
+    // public function details(Request $request){
+    //     $token = session('token');
+    //     if($token == null){
+    //         return 'token is null';
+    //     }
+    //     $todo = Http::withToken($token)->get(`http://localhost:8008/api/serve/{$request->id}`)->json();
+    //     return $todo;
+    // }
 
     public function destroy($id){
         $token = session('token');
@@ -143,6 +143,7 @@ class TodoController extends Controller
             'id' => $id,
             '_method' => 'delete'
         ]);
+        notify()->success('Task deleted');
         return redirect()->back();
     }
 
@@ -183,6 +184,7 @@ class TodoController extends Controller
             'user_id' => $data['user_id'],
             'deadline' => $data['deadline']
         ]);
+        notify()->success('Task successfully created');
         return redirect()->back();
     }
 
@@ -202,6 +204,7 @@ class TodoController extends Controller
         $data['_method'] = 'patch';
         unset($data['_token']);
         Http::withToken($token)->patch('http://localhost:8008/api/serve/update',$data);
+        notify()->success('Task successfully updated');
         return redirect()->back();
     }
 
@@ -226,6 +229,7 @@ class TodoController extends Controller
 
         $data = request()->all();
         Http::post('http://localhost:8008/api/register', $data);
+        notify()->success('Register successfully, please login');
         return redirect('api/login');
     }
 
@@ -250,6 +254,9 @@ class TodoController extends Controller
             session(['token' => $token ]);
             $user = $response->json()['user'];
             session(['user' => $user]);
+            notify()->success('Login successfully');
+            // notify()->preset('user-deleted');
+
             return redirect('api/index');
         }
         else{
