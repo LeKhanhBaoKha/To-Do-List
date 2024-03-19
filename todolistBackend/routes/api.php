@@ -30,7 +30,15 @@ Route::get('serve/completed', [ApiTodoController::class, 'completed']);
 Route::get('serve/inprocess', [ApiTodoController::class, 'inProcess']);
 //
 Route::get('serve/todaytask', [ApiTodoController::class, 'getTodayTask']);
-
+//
+Route::post('serve/gettask', [ApiTodoController::class, 'getTaskName']);
+//
+Route::post('serve/getproject', [ApiTodoController::class, 'getProjectTask']);
+//
+Route::post('serve/getusertask', [ApiTodoController::class, 'getUserTask']);
+//
+Route::post('serve/search', [ApiTodoController::class, 'search']);
+Route::get('serve/search', [ApiTodoController::class, 'search']);
 
 Route::controller(AuthController::class)->group(function(){
     Route::post('login', 'login' );

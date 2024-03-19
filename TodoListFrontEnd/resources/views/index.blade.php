@@ -52,8 +52,8 @@
 {{-- todotable --}}
 <div class="w-full overflow-auto">
     <div class="ml-[10%] max-w-sm my-4 inline-block">
-        <label for="selection" class="mb-2 block text-sm font-medium text-gray-900">Select an option</label>
-        <select id="selection" class="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onchange="navigateTo()">
+        <label for="index_select" class="mb-2 block text-sm font-medium text-gray-900">Select an option</label>
+        <select id="index_select" class="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onchange="navigateTo()">
           <option selected>Choose state</option>
           <option value="http://127.0.0.1:8000/api/index">All</option>
           <option value="http://127.0.0.1:8000/api/completed">Completed</option>
@@ -209,7 +209,7 @@
 
     //this is use for the select tag
     function navigateTo(){
-        var select = document.getElementById('selection');
+        var select = document.getElementById('index_select');
         var selectedOption = select.options[select.selectedIndex].value;
         if(selectedOption){
             window.location.href = selectedOption;

@@ -138,16 +138,26 @@
 
                 <!-- Mobile menu, show/hide based on menu state. -->
                 @include('create')
-                <div class="notification-bell ">
-                    <div class="dropdown inline-block relative">
-                        <button class=" text-white font-semibold py-2 px-4 rounded inline-flex items-center text-left">
-                          <span class="mr-1"><x-fas-bell class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] text-white"/></span>
-                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
-                        </button>
-                        <ul class="dropdown-menu absolute hidden text-gray-700 pt-1 text-left">
-                          <li class=""><a class="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">One</a></li>
-                        </ul>
-                      </div>
+
+                <div class="search">
+                    <form class="flex gap-x-1" method="post" action="search">
+                        @csrf
+                        <div class="relative w-[350px]">
+                          <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+                            <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                          </div>
+                          <input type="search" id="search_box" name="search_box" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-purple-500 focus:ring-purple-500" placeholder="Search" required />
+                          <button type="submit" class="absolute bottom-[0.340rem] end-2.5 rounded-lg bg-purple-600 mt-2 px-4 py-1 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Search</button>
+                        </div>
+                        <select id="selection" name="selection" class="block w-[120px] rounded-lg border border-gray-400 bg-gray-50 p-2 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400">
+                          <option name='user_name' value="user_name" selected>User name</option>
+                          <option name='task_name' value="task_name">Task name</option>
+                          <option name='project_name' value="project_name">Project name</option>
+                        </select>
+
+                    </form>
                 </div>
 
     </nav>

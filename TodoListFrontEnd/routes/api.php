@@ -25,6 +25,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('create', [TodoController::class, 'create']);
     Route::post('store', [TodoController::class, 'store']);
     Route::patch('update', [TodoController::class, 'update']);
+    Route::post('search', [TodoController::class, 'search']);
 
     Route::get('login', [TodoController::class, 'loginPage']);
     Route::post('login', [TodoController::class, 'login']);

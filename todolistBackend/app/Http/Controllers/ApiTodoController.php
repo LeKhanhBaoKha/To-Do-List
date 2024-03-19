@@ -9,6 +9,7 @@ use App\Notifications\CreateTodoSuccessful;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 
 class ApiTodoController extends Controller
 {
@@ -190,6 +191,58 @@ class ApiTodoController extends Controller
             else{
                 $userId = auth()->user()->id;
                 $todos = Todo::where('user_id', $userId)->whereDate('deadline',now()->today())->with('user', 'project')->paginate(10);
+            }
+        }
+        else{
+            return response()->json(['status' => 'error',
+            'message' => 'Unauthorized',], 401);
+        }
+        return response()->json($todos);
+    }
+
+
+    public function search(Request $request){
+        if(auth()->check())
+        {
+            if ($request->has('page') && (!$request->has('search_box') || !$request->has('selection'))) {
+                return response()->json(['status' => 'error',
+                'message' => 'Invalid pagination request. Please provide search criteria.',], 400);
+            }
+            switch ($request->selection) {
+                case 'user_name':
+                {
+                    if(auth()->user()->is_admin == 1){
+                        $user_id = User::where('name',$request->search_box)->value('id');
+                        $todos = Todo::with('project', 'user')->where('user_id', $user_id)->paginate(10);
+                    }
+                    else{
+                        return response()->json(['status' => 'error',
+                        'message' => 'Unauthorized',], 401);
+                    }
+                }
+                break;
+                case 'task_name':
+                {
+                    if(auth()->user()->is_admin == 1){
+                        $todos = Todo::with('project', 'user')->where('name', $request->search_box)->paginate(10);
+                    }
+                    else{
+                        $user_id = auth()->user()->id;
+                        return $todos = Todo::where('user_id', $user_id)->where('name', $request->search_box)->with('project', 'user')->paginate(10);
+                    }
+                }
+                break;
+                case 'project_name':
+                {
+                    $project_id = Project::where('name', $request->search_box)->value('id');
+                    $todos = Todo::with('project', 'user')->where('project_id', $project_id)->paginate(10);
+                }
+                break;
+                default:
+                {
+                    return response()->json(['status' => 'error',
+                    'message' => 'check your selection',], 401);
+                }
             }
         }
         else{
