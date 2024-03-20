@@ -51,33 +51,36 @@
 
 {{-- todotable --}}
 <div class="w-full overflow-auto">
-    <div class="ml-[10%] max-w-sm my-4 inline-block">
-        <label for="index_select" class="mb-2 block text-sm font-medium text-gray-900">Select an option</label>
-        <select id="index_select" class="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onchange="navigateTo()">
-          <option selected>Choose state</option>
-          <option value="http://127.0.0.1:8000/api/index">All</option>
-          <option value="http://127.0.0.1:8000/api/completed">Completed</option>
-          <option value="http://127.0.0.1:8000/api/inprocess">In process</option>
-        </select>
+    <div class="lg:w-[1500px] md:w-[800px] m-auto">
+        <div class="max-w-sm my-4 inline-block">
+            <label for="index_select" class="mb-2 block text-sm font-medium text-gray-900">Select an option</label>
+            <select id="index_select" class="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onchange="navigateTo()">
+              <option selected>Choose state</option>
+              <option value="http://127.0.0.1:8000/api/index">All</option>
+              <option value="http://127.0.0.1:8000/api/completed">Completed</option>
+              <option value="http://127.0.0.1:8000/api/inprocess">In process</option>
+            </select>
+        </div>
+
+        <div class="inline-block ml-2">
+            <a href="todaytask" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none ">Today's task</a>
+        </div>
     </div>
 
-    <div class="inline-block">
-        <a href="todaytask" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none ">Today's task</a>
-    </div>
 
     <table class="table-auto lg:w-[1500px] md:w-[800px] m-auto mb-5">
         <thead>
-          <tr>
-            <th class="px-4 py-2 bg-gray-200 rounded-l-lg" >Todo name of {{$user['is_admin'] ==1 ? 'Everyone' : $user['name']}}</th>
-            <th class="px-4 py-2 bg-gray-200 hidden lg:table-cell">Project name</th>
-            <th class="px-4 py-2 bg-gray-200">state </th>
+          <tr class="bg-gradient-to-br from-pink-50 to-indigo-100">
+            <th class="px-4 py-2 rounded-l-lg" >Todo name of {{$user['is_admin'] ==1 ? 'Everyone' : $user['name']}}</th>
+            <th class="px-4 py-2 hidden lg:table-cell">Project name</th>
+            <th class="px-4 py-2">state </th>
 
-            <th class="px-4 py-2 bg-gray-200 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
+            <th class="px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
 
-            <th class="px-4 py-2 bg-gray-200">Time left</th>
+            <th class="px-4 py-2">Time left</th>
 
             {{-- @if(auth()->check()) --}}
-            <th class="px-4 py-2 bg-gray-200 rounded-r-lg">function</th>
+            <th class="px-4 py-2 rounded-r-lg">function</th>
             {{-- @endif --}}
 
         </tr>
@@ -183,7 +186,7 @@
 </div>
 
 
-  <div class="container mx-[10%] z-0">
+  <div class="lg:w-[1500px] md:w-[800px] m-auto z-0 mb-4">
     @include('TestPagination')
   </div>
 

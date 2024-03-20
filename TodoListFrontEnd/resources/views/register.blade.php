@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<form class="sm:w-[500px] md:w-[600px] bg-white border-gray-500 border rounded px-8 pt-6 pb-8 mb-4 m-auto" method="post" action="register">
+<form class="sm:w-[300px] md:w-[500px] bg-white px-8 pt-6 pb-8 mb-4 m-auto" method="post" action="register">
     @csrf
     <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="name">

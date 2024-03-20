@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<div class="flex justify-center	content-center h-[400px]">
-    <form class="sm:w-[500px] md:w-[600px] bg-white border-gray-500 border rounded px-8 pt-6 pb-8 mb-4 m-auto" method="post" action="login">
+<div class="flex justify-center items-center content-center h-[340px] px-4">
+    <form class="sm:w-[500px] md:w-[600px] px-8 pt-6 pb-8 h-[280px]" method="post" action="login">
         @csrf
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="email">

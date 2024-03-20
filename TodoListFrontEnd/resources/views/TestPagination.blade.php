@@ -15,13 +15,13 @@
 
         @if ($currentPage > 1)
             @if (strpos($todosWithPage['path'], 'completed'))
-            <a href="indexPage?http://localhost:8008/api/serve/completed?page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-left class="w-[10px]"/></a>
+            <a href="indexPage?http://localhost:8008/api/serve/completed?page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-l-lg"><x-fas-angle-left class="w-[10px]"/></a>
             @elseif(strpos($todosWithPage['path'], 'inprocess'))
-            <a href="indexPage?http://localhost:8008/api/serve/inprocess?page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-left class="w-[10px]"/></a>
+            <a href="indexPage?http://localhost:8008/api/serve/inprocess?page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-l-lg"><x-fas-angle-left class="w-[10px]"/></a>
             @elseif(strpos($todosWithPage['path'], 'search'))
-            <a href="indexPage?http://localhost:8008/api/serve/search?search_box={{Session::get('search_box')}}&selection={{Session::get('selection')}}&page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-left class="w-[10px]"/></a>
+            <a href="indexPage?http://localhost:8008/api/serve/search?search_box={{Session::get('search_box')}}&selection={{Session::get('selection')}}&page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-l-lg"><x-fas-angle-left class="w-[10px]"/></a>
             @else
-            <a href="indexPage?http://localhost:8008/api/serve/index?page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-left class="w-[10px]"/></a>
+            <a href="indexPage?http://localhost:8008/api/serve/index?page={{$currentPage -1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-l-lg"><x-fas-angle-left class="w-[10px]"/></a>
             @endif
         @endif
 
@@ -40,13 +40,13 @@
         @if ($currentPage < $totalPages)
 
         @if (strpos($todosWithPage['path'], 'completed'))
-        <a href="indexPage?http://localhost:8008/api/serve/completed?page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-right class="w-[10px]"/></a>
+        <a href="indexPage?http://localhost:8008/api/serve/completed?page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-r-lg"><x-fas-angle-right class="w-[10px]"/></a>
         @elseif(strpos($todosWithPage['path'], 'inprocess'))
-        <a href="indexPage?http://localhost:8008/api/serve/inprocess?page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-right class="w-[10px]"/></a>
+        <a href="indexPage?http://localhost:8008/api/serve/inprocess?page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-r-lg"><x-fas-angle-right class="w-[10px]"/></a>
         @elseif(strpos($todosWithPage['path'], 'search'))
-        <a href="indexPage?http://localhost:8008/api/serve/search?search_box={{Session::get('search_box')}}&selection={{Session::get('selection')}}&page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-right class="w-[10px]"/></a>
+        <a href="indexPage?http://localhost:8008/api/serve/search?search_box={{Session::get('search_box')}}&selection={{Session::get('selection')}}&page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-r-lg"><x-fas-angle-right class="w-[10px]"/></a>
         @else
-        <a href="indexPage?http://localhost:8008/api/serve/index?page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear"><x-fas-angle-right class="w-[10px]"/></a>
+        <a href="indexPage?http://localhost:8008/api/serve/index?page={{$currentPage +1}}" aria-current="page" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-purple-100 hover:text-black focus:z-20 focus:outline-offset-0 transition duration-300 ease-linear rounded-r-lg"><x-fas-angle-right class="w-[10px]"/></a>
         @endif
         @endif
 

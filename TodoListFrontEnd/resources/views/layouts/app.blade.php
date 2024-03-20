@@ -43,7 +43,7 @@
 
 </head>
 
-<body class="roboto-regular">
+<body class="roboto-regular h-screen bg-gradient-to-br from-pink-50 to-indigo-100">
     <nav class="bg-gray-800 mb-5">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
@@ -154,16 +154,22 @@
                           <button type="submit" class="absolute bottom-[0.340rem] end-2.5 rounded-lg bg-purple-600 mt-2 px-4 py-1 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Search</button>
                         </div>
                         <select id="selection" name="selection" class="block w-[120px] rounded-lg border border-gray-400 bg-gray-50 p-2 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400">
-                          <option name='user_name' value="user_name" selected>User name</option>
-                          <option name='task_name' value="task_name">Task name</option>
-                          <option name='project_name' value="project_name">Project name</option>
+                            @if($userinfo['is_admin'] == 1)
+                                <option name='user_name' value="user_name" selected>User name</option>
+                            @endif
+                            @if($userinfo['is_admin'] == 0)
+                                <option name='task_name' value="task_name" selected>Task name</option>
+                            @else
+                                <option name='task_name' value="task_name">Task name</option>
+                            @endif
+                            <option name='project_name' value="project_name">Project name</option>
                         </select>
 
                     </form>
                 </div>
                 @endif
     </nav>
-    <div>
+    <div class=" mx-auto rounded-2xl border bg-white p-2 shadow-sm {{strpos(url()->current(), 'login')||strpos(url()->current(), 'register')? 'w-[600px] mt-[100px]':'w-[85%]'}}">
         @yield('content')
     </div>
     <footer class="bg-gray-800">

@@ -103,8 +103,6 @@ class TodoController extends Controller
             $endDate = Carbon::parse($todo['deadline']);
             if($startDate->gt($endDate)){
                 $timeLeft = [ 'days' => 0, 'hours' => 0, 'minutes' => 0, 'totalMinutes' => 0 ];
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
             }
             else{
                 $totalMinutesLeft = $startDate->diffInMinutes($endDate);

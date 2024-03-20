@@ -228,14 +228,21 @@ class ApiTodoController extends Controller
                     }
                     else{
                         $user_id = auth()->user()->id;
-                        return $todos = Todo::where('user_id', $user_id)->where('name', $request->search_box)->with('project', 'user')->paginate(10);
+                        $todos = Todo::where('user_id', $user_id)->where('name', $request->search_box)->with('project', 'user')->paginate(10);
                     }
                 }
                 break;
                 case 'project_name':
                 {
-                    $project_id = Project::where('name', $request->search_box)->value('id');
-                    $todos = Todo::with('project', 'user')->where('project_id', $project_id)->paginate(10);
+                    if(auth()->user()->is_admin == 1){
+                        $project_id = Project::where('name', $request->search_box)->value('id');
+                        $todos = Todo::with('project', 'user')->where('project_id', $project_id)->paginate(10);
+                    }
+                    else{
+                        $user_id = auth()->user()->id;
+                        $project_id = Project::where('name', $request->search_box)->value('id');
+                        $todos = Todo::with('project', 'user')->where('project_id', $project_id)->where('user_id', $user_id)->paginate(10);
+                    }
                 }
                 break;
                 default:
