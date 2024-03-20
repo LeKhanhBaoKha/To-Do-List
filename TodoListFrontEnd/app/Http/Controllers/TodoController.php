@@ -54,9 +54,9 @@ class TodoController extends Controller
                     $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
                     $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
                 }
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
             }
+            $todo['timeleft'] = $timeLeft;
+            $todos[] = $todo;
 
         }
         $paginationLinks = $todosWithPage['links'];
@@ -78,9 +78,19 @@ class TodoController extends Controller
         $is_loggedIn = true;
         // end
 
-
         // the link to the page that the user has just clicked.
-        $link = key($request->all()).'='.implode($request->all());
+        if( strpos(array_key_first($request->all()), 'search') ){
+            $links = $request->all();
+            $link = "";
+            $first = true;
+            foreach ($links as $key => $value) {
+            $link .= ($first ? '' : '&') . $key . '=' . urlencode($value);
+            $first = false;
+            }
+        }
+        else{
+            $link = key($request->all()).'='.implode($request->all());
+        }
         //fetch the data for the page the user clicked
         $todosWithPage = Http::withToken($token)->get($link)->json();
 
@@ -114,9 +124,9 @@ class TodoController extends Controller
                     $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
                     $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
                 }
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
             }
+            $todo['timeleft'] = $timeLeft;
+            $todos[] = $todo;
         }
 
         $paginationLinks = $todosWithPage['links'];
@@ -124,15 +134,6 @@ class TodoController extends Controller
         $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
         return view('index', compact('todos', 'paginationLinks', 'numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
     }
-
-    // public function details(Request $request){
-    //     $token = session('token');
-    //     if($token == null){
-    //         return 'token is null';
-    //     }
-    //     $todo = Http::withToken($token)->get(`http://localhost:8008/api/serve/{$request->id}`)->json();
-    //     return $todo;
-    // }
 
     public function destroy($id){
         $token = session('token');
@@ -250,8 +251,10 @@ class TodoController extends Controller
         $response = Http::post('http://localhost:8008/api/login', $data);
         session()->start();
         if($response['status'] == 'success'){
+            //set token session
             $token = $response->json()['authorisation']['token'];
             session(['token' => $token ]);
+            //set user session
             $user = $response->json()['user'];
             session(['user' => $user]);
             notify()->success('Login successfully');
@@ -318,10 +321,10 @@ class TodoController extends Controller
                     $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
                     $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
                 }
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
-            }
 
+            }
+            $todo['timeleft'] = $timeLeft;
+            $todos[] = $todo;
         }
         $paginationLinks = $todosWithPage['links'];
         $numberOfPage = $todosWithPage['last_page'];
@@ -370,9 +373,9 @@ class TodoController extends Controller
                     $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
                     $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
                 }
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
             }
+            $todo['timeleft'] = $timeLeft;
+            $todos[] = $todo;
         }
         $paginationLinks = $todosWithPage['links'];
         $numberOfPage = $todosWithPage['last_page'];
@@ -420,9 +423,9 @@ class TodoController extends Controller
                     $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
                     $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
                 }
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
             }
+            $todo['timeleft'] = $timeLeft;
+            $todos[] = $todo;
         }
         $paginationLinks = $todosWithPage['links'];
         $numberOfPage = $todosWithPage['last_page'];
@@ -442,12 +445,20 @@ class TodoController extends Controller
         $is_loggedIn = true;
         // end
 
-        // return $request->all();
+        //set search_box and selection section for testpagination to use
+        $search_box = $request->search_box;
+        session(['search_box' => $search_box ]);
+        $selection = $request->selection;
+        session(['selection' => $selection ]);
+        //
 
-        $todosWithPage = Http::withToken($token)->post('http://localhost:8008/api/serve/search', $request->all())->json();
+        $data = $request->all();
+        unset($data['_token']);
+        $todosWithPage = Http::withToken($token)->get('http://localhost:8008/api/serve/search', $data)->json();
         $todos = null;
         $todoswithOutTimeLeft = $todosWithPage['data'];
 
+        //dealing with time
         foreach($todoswithOutTimeLeft as $todo){
             $startDate = Carbon::now();
             $endDate = Carbon::parse($todo['deadline']);
@@ -472,12 +483,18 @@ class TodoController extends Controller
                     $minutesafterhour = $minutesafterday - $hours*60; //65 - 1*60 = 5
                     $timeLeft = [ 'days' => $days, 'hours' => $hours , 'minutes' => $minutesafterhour, 'totalMinutes' => $totalMinutesLeft];
                 }
-                $todo['timeleft'] = $timeLeft;
-                $todos[] = $todo;
             }
+            $todo['timeleft'] = $timeLeft;
+            $todos[] = $todo;
         }
+        //
+
+        //use for pagination
         $paginationLinks = $todosWithPage['links'];
         $numberOfPage = $todosWithPage['last_page'];
+        //
+
+
         $data = Http::withToken($token)->get('http://localhost:8008/api/serve/createData')->json();
         return view('index', compact('todos', 'paginationLinks','numberOfPage', 'todosWithPage', 'data', 'is_loggedIn', 'user'));
     }

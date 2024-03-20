@@ -57,40 +57,44 @@
                         <div class="flex space-x-4 ">
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             @if (strpos(url()->current(), 'login'))
-                            <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checked
-                                your to-do list?</p>
-                            <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'register'))
-                            bg-gray-900 text-white
-                            @else
-                            text-gray-300
-                            @endif
-                        ">Register</a>
+                            <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checked your to-do list?</p>
+
+                                <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                                @if (strpos(url()->current(), 'register'))
+                                bg-gray-900 text-white
+                                @else
+                                text-gray-300
+                                @endif
+                                ">Register</a>
+
                             @elseif (strpos(url()->current(), 'register'))
-                            <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checked
-                                your to-do list?</p>
-                            <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'register'))
-                            bg-gray-900 text-white
+
+                                <p class=" text-gray-300 rounded-md px-3 py-2 text-sm font-medium">Hello, Have you checkedyour to-do list?</p>
+                                <a href="register" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                                @if (strpos(url()->current(), 'register'))
+                                bg-gray-900 text-white
+                                @else
+                                text-gray-300
+                                @endif
+                                ">Register</a>
+
+                                <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                                @if (strpos(url()->current(), 'login'))
+                                bg-gray-900 text-white
+                                @else
+                                text-gray-300
+                                @endif
+                                ">Login</a>
+
                             @else
-                            text-gray-300
-                            @endif
-                        ">Register</a>
-                            <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'login'))
-                            bg-gray-900 text-white
-                            @else
-                            text-gray-300
-                            @endif
-                        ">Login</a>
-                            @else
+
                             <a href="index" class="hover:bg-gray-700 hover:text-white text-gray-300 rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                    @if (strpos(url()->current(), 'index'))
-                    bg-gray-900 text-white
-                    @else
-                    text-gray-300
-                    @endif
-                    " aria-current="page">
+                            @if (strpos(url()->current(), 'index'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif
+                            " aria-current="page">
                                 @if ($user == 1)
                                 Hello Admin
                                 @else
@@ -98,13 +102,12 @@
                                 @endif
                             </a>
 
-                            <a class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                        @if (strpos(url()->current(), 'create'))
-                        bg-gray-900 text-white
-                        @else
-                        text-gray-300
-                        @endif
-                    ">
+                            <a class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                            @if (strpos(url()->current(), 'create'))
+                            bg-gray-900 text-white
+                            @else
+                            text-gray-300
+                            @endif">
                                 <label for="create" class="cursor-pointer rounded">Create</label>
                             </a>
 
@@ -126,10 +129,9 @@
                             bg-gray-900 text-white
                             @else
                             text-gray-300
+                            @endif">Login</a>
                             @endif
-                        ">Login</a>
 
-                            @endif
                             @endif
                         </div>
                     </div>
@@ -138,9 +140,9 @@
 
                 <!-- Mobile menu, show/hide based on menu state. -->
                 @include('create')
-
-                <div class="search">
-                    <form class="flex gap-x-1" method="post" action="search">
+                @if (!strpos(url()->current(), 'login') && !strpos(url()->current(), 'register') )
+                <div class="search {{$is_loggedIn? "block" : "hidden"}}">
+                    <form class="flex gap-x-1" method="get" action="search">
                         @csrf
                         <div class="relative w-[350px]">
                           <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
@@ -159,7 +161,7 @@
 
                     </form>
                 </div>
-
+                @endif
     </nav>
     <div>
         @yield('content')

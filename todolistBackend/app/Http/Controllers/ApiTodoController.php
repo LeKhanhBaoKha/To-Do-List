@@ -147,7 +147,7 @@ class ApiTodoController extends Controller
             }
             else{
                 $userId = auth()->user()->id;
-                $todos = Todo::where('user_id', $userId)->where('state', 1)->with('user', 'project')->paginate(10);
+                $todos = Todo::with('user', 'project')->where('user_id', $userId)->where('state', 1)->paginate(10);
             }
         }
         else{
@@ -213,7 +213,7 @@ class ApiTodoController extends Controller
                 {
                     if(auth()->user()->is_admin == 1){
                         $user_id = User::where('name',$request->search_box)->value('id');
-                        $todos = Todo::with('project', 'user')->where('user_id', $user_id)->paginate(10);
+                        $todos = Todo::where('user_id', $user_id)->with('project', 'user')->paginate(10);
                     }
                     else{
                         return response()->json(['status' => 'error',
