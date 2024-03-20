@@ -5,3 +5,4 @@ in the frontend run yarn watch and npm run dev to build tailwindcss
 I use a font awsome package for Laravel called owenvoke/blade-fontawesome
 you need to run composer require owenvoke/blade-fontawesome
 and after that run php artisan vendor:publish --tag=blade-fontawesome-config
+I also use laravel-notify package for this project no need to install I just say it to clear thing up.
