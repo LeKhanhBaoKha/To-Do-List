@@ -9,7 +9,6 @@ use App\Notifications\CreateTodoSuccessful;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redis;
 
 class ApiTodoController extends Controller
 {

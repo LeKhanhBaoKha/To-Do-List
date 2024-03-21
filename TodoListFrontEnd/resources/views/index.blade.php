@@ -88,6 +88,7 @@
         <tbody>
 
         @foreach ($todos as $todo)
+        {{-- table row --}}
         <tr class="hover:bg-green-50 transition duration-300 ease-in-out rounded-xl
             @if ($todo['timeleft']['days'] == 0 && $todo['timeleft']['hours'] == 0 && $todo['timeleft']['minutes'] != 0)
                 @if ($todo['timeleft']['minutes'] > 10)
@@ -169,12 +170,13 @@
           </td>
           {{-- end of functions --}}
         </tr>
+        {{-- end table row --}}
         @endforeach
 
 
         @else
 
-        <div class="container mx-auto flex items-center justify-center h-screen">
+        <div class="container mx-auto flex items-center justify-center h-[80vh]">
             <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Nothing to do, let's chill</p>
         </div>
 

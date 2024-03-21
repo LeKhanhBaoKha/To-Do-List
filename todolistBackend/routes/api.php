@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiProjectController;
 use App\Http\Controllers\ApiTodoController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -37,9 +38,13 @@ Route::post('serve/getproject', [ApiTodoController::class, 'getProjectTask']);
 //
 Route::post('serve/getusertask', [ApiTodoController::class, 'getUserTask']);
 //
-Route::post('serve/search', [ApiTodoController::class, 'search']);
 Route::get('serve/search', [ApiTodoController::class, 'search']);
-
+//
+Route::get('serve/projects', [ApiProjectController::class, 'index']);
+//
+Route::post('serve/createProject', [ApiProjectController::class, 'store']);
+//
+Route::post('serve/deleteProject', [ApiProjectController::class, 'destroy']);
 Route::controller(AuthController::class)->group(function(){
     Route::post('login', 'login' );
     ROute::post('register','register');

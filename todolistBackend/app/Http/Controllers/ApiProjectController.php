@@ -16,7 +16,7 @@ class ApiProjectController extends Controller
 
     public function index(){
         if(auth()->user()->is_admin == 1){
-            $projects = Project::all();
+            return Project::paginate(10);
         }
         else{
             return response()->json(['status' => 'error',

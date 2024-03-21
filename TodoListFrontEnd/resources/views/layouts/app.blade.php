@@ -43,7 +43,7 @@
 
 </head>
 
-<body class="roboto-regular h-screen bg-gradient-to-br from-pink-50 to-indigo-100">
+<body class="roboto-regular h-screen bg-gradient-to-br from-pink-50 to-indigo-100 overflow-auto	">
     <nav class="bg-gray-800 mb-5">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
@@ -51,7 +51,7 @@
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex flex-shrink-0 items-center">
                         <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                            alt="Your Company">
+                            alt="BaoKha-TodoList">
                     </div>
                     <div class="sm:ml-6 sm:block items-center">
                         <div class="flex space-x-4 ">
@@ -88,49 +88,55 @@
 
                             @else
 
-                            <a href="index" class="hover:bg-gray-700 hover:text-white text-gray-300 rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'index'))
-                            bg-gray-900 text-white
-                            @else
-                            text-gray-300
-                            @endif
-                            " aria-current="page">
-                                @if ($user == 1)
-                                Hello Admin
+                                <a href="index" class="hover:bg-gray-700 hover:text-white text-gray-300 rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                                @if (strpos(url()->current(), 'index'))
+                                bg-gray-900 text-white
                                 @else
-                                To Do List
+                                text-gray-300
                                 @endif
-                            </a>
+                                " aria-current="page">
+                                    @if ($user == 1)
+                                    Hello Admin
+                                    @else
+                                    To Do List
+                                    @endif
+                                </a>
 
-                            <a class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'create'))
-                            bg-gray-900 text-white
-                            @else
-                            text-gray-300
-                            @endif">
-                                <label for="create" class="cursor-pointer rounded">Create</label>
-                            </a>
+                                <a class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                                @if (strpos(url()->current(), 'create'))
+                                bg-gray-900 text-white
+                                @else
+                                text-gray-300
+                                @endif">
+                                    <label for="create" class="cursor-pointer rounded">Create</label>
+                                </a>
 
-                            {{-- check if the user is login or not --}}
+                                {{-- check if the user is login or not --}}
 
-                            @if ($is_loggedIn)
-                            {{-- if they are, change the log in button to log out --}}
-                            <a class="transition duration-300 ease-in-out text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log
-                                out</a>
+                                @if ($is_loggedIn)
+                                <a href="projects" class="transition duration-300 ease-in-out text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium {{$userinfo['is_admin'] == 1 ? 'block' : 'hidden'}}">
+                                Projects</a>
+                                {{-- if they are, change the log in button to log out --}}
+                                <a class="transition duration-300 ease-in-out text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log
+                                    out</a>
 
-                            {{-- logout form --}}
-                            <form action="logout" method="post" class="hidden" id="logout-form">@csrf</form>
+                                {{-- logout form --}}
+                                <form action="logout" method="post" class="hidden" id="logout-form">@csrf</form>
 
-                            @else
-                            {{-- if they are not, keep the log in button --}}
-                            <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
-                            @if (strpos(url()->current(), 'login'))
-                            bg-gray-900 text-white
-                            @else
-                            text-gray-300
-                            @endif">Login</a>
-                            @endif
+                                @else
+                                {{-- if they are not, keep the log in button --}}
+                                <a href="login" class=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out
+                                @if (strpos(url()->current(), 'login'))
+                                bg-gray-900 text-white
+                                @else
+                                text-gray-300
+                                @endif">
+                                Login</a>
+
+
+
+                                @endif
 
                             @endif
                         </div>
@@ -139,8 +145,12 @@
                 </div>
 
                 <!-- Mobile menu, show/hide based on menu state. -->
-                @include('create')
-                @if (!strpos(url()->current(), 'login') && !strpos(url()->current(), 'register') )
+                @if (strpos(url()->current(), 'projects') ||strpos(url()->current(), 'projectIndexPage'))
+                    @include('project.create')
+                @else
+                    @include('create')
+                @endif
+                @if (!strpos(url()->current(), 'login') && !strpos(url()->current(), 'register') && !strpos(url()->current(), 'projects') && !strpos(url()->current(), 'projectIndexPage'))
                 <div class="search {{$is_loggedIn? "block" : "hidden"}}">
                     <form class="flex gap-x-1" method="get" action="search">
                         @csrf
@@ -169,9 +179,19 @@
                 </div>
                 @endif
     </nav>
-    <div class=" mx-auto rounded-2xl border bg-white p-2 shadow-sm {{strpos(url()->current(), 'login')||strpos(url()->current(), 'register')? 'w-[600px] mt-[100px]':'w-[85%]'}}">
-        @yield('content')
-    </div>
+
+
+    @if (strpos(url()->current(), 'projects')||strpos(url()->current(), 'projectIndexPage'))
+        <div class=" mx-auto rounded-2xl border bg-white p-2 shadow-sm w-[600px] mt-[50px]">
+            @yield('content')
+        </div>
+    @else
+        <div class=" mx-auto rounded-2xl border bg-white p-2 shadow-sm {{strpos(url()->current(), 'login')||strpos(url()->current(), 'register')? 'w-[600px] mt-[100px]':'w-[85%]'}}">
+            @yield('content')
+        </div>
+    @endif
+
+
     <footer class="bg-gray-800">
         <p class="text-gray-300  rounded-md px-3 py-2 text-sm font-medium">@copy right: lekhanhbaokha@gmail.com</p>
     </footer>
