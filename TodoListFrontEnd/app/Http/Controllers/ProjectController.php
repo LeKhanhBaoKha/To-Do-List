@@ -79,7 +79,23 @@ class ProjectController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(){
-
+    public function destroy(Request $request){
+        // handling token and user authentication
+        $token = session('token');
+        if($token == null){
+            return 'token is null';
+        }
+        try{
+            $this->validate(request(),[
+                'id' => ['required']
+            ]);
+        }catch(ValidationException $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Can not find the project you want to delete',
+            ]);
+        }
+        Http::withToken($token)->post('http://localhost:8008/api/serve/deleteProject', $request->all())->json();
+        return redirect()->back();
     }
 }

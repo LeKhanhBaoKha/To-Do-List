@@ -29,8 +29,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('store', [TodoController::class, 'store']);
     Route::patch('update', [TodoController::class, 'update']);
     Route::get('search', [TodoController::class, 'search']);
+
     Route::get('projects', [ProjectController::class, 'index']);
     Route::post('project', [ProjectController::class, 'store']);
+    Route::post('deleteProject', [ProjectController::class, 'destroy']);
+
+
     Route::get('login', [TodoController::class, 'loginPage']);
     Route::post('login', [TodoController::class, 'login']);
     Route::post('logout', [TodoController::class, 'logout']);
