@@ -1,3 +1,4 @@
+You have to use xampp with php verion >= 8.2
 use this to run the backend with  xamp php -S localhost:8008 -t public
 
 in the frontend run yarn watch and npm run dev to build tailwindcss
