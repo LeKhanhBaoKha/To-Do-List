@@ -30,9 +30,7 @@
             font-style: normal;
         }
 
-        .dropdown:hover .dropdown-menu {
-         display: block;
-        }
+
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

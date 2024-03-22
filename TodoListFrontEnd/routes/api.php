@@ -34,7 +34,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('project', [ProjectController::class, 'store']);
     Route::post('deleteProject', [ProjectController::class, 'destroy']);
 
-
+    Route::get('', [TodoController::class, 'loginPage']);
     Route::get('login', [TodoController::class, 'loginPage']);
     Route::post('login', [TodoController::class, 'login']);
     Route::post('logout', [TodoController::class, 'logout']);
