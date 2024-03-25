@@ -1,23 +1,64 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-
+import * as React from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Check from "./function/check";
 const Index = () =>{
-    const [todos, setTodos] = useState('');
+    const [todos, setTodos] = useState(null);
     const token = sessionStorage.getItem('token');
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const CheckWrapper = ({todo})=>{
+        const check = Check(todo);
+        return check
+    };
+    
     useEffect(()=>{
-        axios.get('http://localhost:8008/api/serve/index',{
-            headers:{
-                Authorization: `Bearer ${token}`
+        const fetchData = async()=>{
+            setIsLoading(true);
+            setError(null);
+
+            try{
+                const response = await fetch('http://localhost:8008/api/serve/index',{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if(!response.ok){
+                    throw new Error(`Api request failed with status ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                setTodos(responseData.data);
+            }catch(error){
+                setError(error.message);
+            }finally{
+                setIsLoading(false);
             }
-        }).then(response =>{ 
-            setTodos(response.data.data);
-            console.log(todos);
-        }).catch((error) =>{
-            console.log(error);
-        })
+        }
+        fetchData();
+
     },[]);
 
-    console.log(todos);
+    if (error) {
+        return (        
+        <div class="container mx-auto flex items-center justify-center h-[80vh]">
+            <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Error: {error}</p>
+        </div>);
+      }
+    
+      if (!todos) {
+        return (        
+        <div class="container mx-auto flex items-center justify-center h-[80vh]">
+            <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+            </Box>
+            <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Loading</p>
+        </div>);
+      }
+      console.log(todos);
 
     return(
         <div className="mx-auto rounded-2xl border bg-white p-2 w-[85%]">
@@ -44,8 +85,8 @@ const Index = () =>{
                     <table class="table-auto lg:w-[1500px] md:w-[800px] m-auto mb-5">
                         <thead>
                         <tr class="bg-gradient-to-br from-pink-50 to-indigo-100">
-                            <th class="px-4 py-2 rounded-l-lg" >Todo name of </th>
-                            <th class="px-4 py-2 hidden lg:table-cell">Project name</th>
+                            <th class="px-4 py-2 rounded-l-lg" >Todo name</th>
+                            <th class="px-4 py-2 lg:table-cell">Project name</th>
                             <th class="px-4 py-2">state </th>
                             <th class="px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
                             <th class="px-4 py-2">Time left</th>
@@ -83,14 +124,20 @@ const Index = () =>{
             </td>
 
             {/* timeLeft */}
-            {/* <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-left">
-                {todo['timeLeft']['days'] == 0 && todo['timeLeft']['hours'] == 0 && todo['timeLeft']['minutes'] == 0 ? 
-                (
-                    <p class="font-bold text-red-600 bg-red-50 rounded-lg text-center w-[80px] m-auto">Time's up</p>
-                ):(
-                    <p class="font-bold bg-red-50 rounded-lg text-center w-[80px] m-auto">Time's up</p>
-                )}
-            </td> */}
+            <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-left">
+                {renderTimeLeft(todo)}
+            </td>
+
+            {/* function */}
+            <td class="box-border border-b-2 border-gray-150 px-4 py-2 rounded-r-lg">
+                <div className="flex justify-center">
+                    {/* check button */}
+                    <CheckWrapper todo={todo}/>
+                    {/* end check button */}
+
+                    {/* details */}
+                </div>
+            </td>
         </tr>
     ))
 }
@@ -100,7 +147,7 @@ const Index = () =>{
             )
             :
             (
-                <div class="container mx-auto flex items-center justify-center h-[80vh]">
+            <div class="container mx-auto flex items-center justify-center h-[80vh]">
                 <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Nothing to do, let's chill</p>
             </div>
             )
@@ -108,5 +155,41 @@ const Index = () =>{
         </div>
     )
 }
+
+function renderTimeLeft(todo){
+    if(todo.timeLeft == 0){
+        return <>
+            <p className="font-bold text-red-600 bg-red-50 rounded-lg text-center w-[80px] m-auto">Time's up</p>
+        </>
+    }else{
+        if(todo.timeLeft <60){
+            return <>{todo.timeLeft} minutes</>;
+        }
+        else if(todo.timeLeft < 1440){
+            return <>
+            {Math.floor(todo.timeLeft/60)} hours {todo.timeLeft%60} minutes
+            </>
+        }
+        else{
+            let days = Math.floor(todo.timeLeft/1440);
+            let minutesAfterDay = todo.timeLeft - days*1440;
+            let hours = Math.floor(minutesAfterDay/60);
+            let minutes = minutesAfterDay - hours*60;
+
+            const totalTimeLeft = [];
+            if(days != 0){
+                totalTimeLeft.push(`${days} days`)
+            }
+            if(hours != 0){
+                totalTimeLeft.push(`${hours} hours`);
+            }
+            if(minutes != 0){
+                totalTimeLeft.push(`${minutes} minutes`);
+            }
+            return <>{totalTimeLeft.join(' ')}</>;
+        }
+    }
+}
+
 
 export default Index

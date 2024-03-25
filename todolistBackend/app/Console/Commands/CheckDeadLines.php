@@ -27,11 +27,6 @@ class CheckDeadLines extends Command
      */
     public function handle()
     {
-        $todos = Todo::where('deadline', '<=', now()->addHOurs(1))->get();
 
-        foreach($todos as $todo){
-            $todo->user->notify(new TaskDeadLineApproaching($todo));
-        }
-        $this->info('Deadline notifications sent successfully');
     }
 }

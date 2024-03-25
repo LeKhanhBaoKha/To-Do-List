@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Todo;
 use App\Models\User;
 use App\Notifications\CreateTodoSuccessful;
+use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -256,5 +257,23 @@ class ApiTodoController extends Controller
             'message' => 'Unauthorized',], 401);
         }
         return response()->json($todos);
+    }
+
+    public function updateTime(){
+        $todos = Todo::where('deadline', '>', now())->get();
+
+        foreach ($todos as $todo) {
+            $deadline = Carbon::parse($todo->deadline);
+            $now = Carbon::now();
+
+            if ($now->gt($deadline)) {
+                $timeLeft = 0;
+            } else {
+                $timeLeft = $now->diffInMinutes($deadline);
+            }
+            // Update the timeLeft for the current todo
+            $todo->update(['timeLeft' => $timeLeft]);
+        }
+        return $todos;
     }
 }
