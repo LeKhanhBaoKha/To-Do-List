@@ -3,22 +3,30 @@ import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Check from "./function/check";
+import Details from "./function/details";
+import Edit from "./function/Edit";
 const Index = () =>{
     const [todos, setTodos] = useState(null);
     const token = sessionStorage.getItem('token');
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [check, setCheck] = useState(false);
+    const [data, setData] = useState(null);
 
     const CheckWrapper = ({todo, fetchData})=>{
         const check = Check(todo, fetchData);
         return check
     };
-
+    const DetailsWrapper = ({todo})=>{
+        const details = Details(todo);
+        return details;
+    }
+    const EditWrapper = ({todo, data})=>{
+        const edit = Edit(todo, data);
+        return edit;
+    }
     const fetchData = async()=>{
         setIsLoading(true);
         setError(null);
-
         try{
             const response = await fetch('http://localhost:8008/api/serve/index',{
                 headers: {
@@ -28,7 +36,6 @@ const Index = () =>{
             if(!response.ok){
                 throw new Error(`Api request failed with status ${response.status}`);
             }
-
             const responseData = await response.json();
             setTodos(responseData.data);
         }catch(error){
@@ -38,10 +45,36 @@ const Index = () =>{
         }
     }
 
+    const fetchProjectsUsers = async()=>{
+        try{
+            const response = await fetch('http://localhost:8008/api/serve/createData',{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if(!response.ok){
+                throw new Error(`Api request for projects failed with status ${response.status}`);
+            }
+            const responseData = await response.json();
+            console.log('responseData',responseData);
+            setData(responseData);
+            
+        }catch(error){
+            setError(error.message);
+        }
+    }
+
     useEffect(()=>{
         fetchData();
-    },[]);
+        fetchProjectsUsers();
+        const timerId = setInterval(fetchData, 60000); // Update every 60 seconds (1 minute)
 
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(timerId);
+    },[]);
+    console.log('data:', data);
+    // console.log('data project:',data['projects']);
+    // console.log('data user:',data['users']);
     if (error) {
         return (        
         <div class="container mx-auto flex items-center justify-center h-[80vh]">
@@ -58,7 +91,6 @@ const Index = () =>{
             <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Loading</p>
         </div>);
       }
-      console.log(todos);
 
     return(
         <div className="mx-auto rounded-2xl border bg-white p-2 w-[85%]">
@@ -136,6 +168,10 @@ const Index = () =>{
                     {/* end check button */}
 
                     {/* details */}
+                    <DetailsWrapper todo={todo}/>
+
+                    {/* edit */}
+                    <EditWrapper todo={todo} data={data}/>
                 </div>
             </td>
         </tr>

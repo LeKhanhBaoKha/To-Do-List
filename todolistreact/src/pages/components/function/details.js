@@ -1,5 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faPenToSquare, faX } from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment'
+import { format } from 'date-fns';
 function Details(todo){
     return <>
         <button class={`${todo['id']}-modal font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 details-button`} id="dt-button" >
@@ -7,5 +9,28 @@ function Details(todo){
             <FontAwesomeIcon icon={faPenToSquare} class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] details"/>
         </label>
         </button>
+
+        <div class="z-10">
+        <input type="checkbox" id="{{$todo['id']}}-modal" class="peer fixed appearance-none opacity-0" />
+        <label for="{{$todo['id']}}-modal" class="pointer-events-none invisible fixed inset-0 flex cursor-pointer items-center justify-center overflow-hidden overscroll-contain bg-slate-700/30 opacity-0 transition-all duration-[0.5s] ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100">
+        <label class="max-h-[calc(100vh - 5em)] scale-99 h-fit max-w-lg overflow-auto overscroll-contain rounded-md bg-white p-6 text-black shadow-2xl transition" for="">
+            <h3 class="py-2 text-lg font-bold text-center">Name: {todo["name"]}</h3>
+            <p class="py-1">Description: {todo['description']}</p>
+            <div class="flex">
+                <label for="" class="py-1">State:&nbsp;</label>
+                {todo['state'] == 0 ?
+                (<p class="py-1 text-blue-500 font-bold">In process</p>):
+                (<p class="py-1 text-green-500 font-blod">Complete</p>)}    
+            </div>
+            <p class="py-1">Project: {todo['project']['name']}</p>
+            <p class="py-1">Belongs to: {todo['user']['name']}</p>
+            <p class="py-1">Starting date: {format(todo['created_at'], 'MMMM do yyyy, h:mm:ss a')}</p>
+            <p class="py-1">Deadline: {format(todo['deadline'], 'MMMM do yyyy, h:mm:ss a')}</p>
+            <p class="py-1">Deadline: {moment().format('MMMM Do YYYY, h:mm:ss a')}</p>
+        </label>
+        </label>
+        </div>
     </>
 }
+
+export default Details
