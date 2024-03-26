@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,37 +8,38 @@ const Index = () =>{
     const token = sessionStorage.getItem('token');
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [check, setCheck] = useState(false);
 
-    const CheckWrapper = ({todo})=>{
-        const check = Check(todo);
+    const CheckWrapper = ({todo, fetchData})=>{
+        const check = Check(todo, fetchData);
         return check
     };
-    
-    useEffect(()=>{
-        const fetchData = async()=>{
-            setIsLoading(true);
-            setError(null);
 
-            try{
-                const response = await fetch('http://localhost:8008/api/serve/index',{
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                if(!response.ok){
-                    throw new Error(`Api request failed with status ${response.status}`);
-                }
+    const fetchData = async()=>{
+        setIsLoading(true);
+        setError(null);
 
-                const responseData = await response.json();
-                setTodos(responseData.data);
-            }catch(error){
-                setError(error.message);
-            }finally{
-                setIsLoading(false);
+        try{
+            const response = await fetch('http://localhost:8008/api/serve/index',{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if(!response.ok){
+                throw new Error(`Api request failed with status ${response.status}`);
             }
-        }
-        fetchData();
 
+            const responseData = await response.json();
+            setTodos(responseData.data);
+        }catch(error){
+            setError(error.message);
+        }finally{
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(()=>{
+        fetchData();
     },[]);
 
     if (error) {
@@ -132,7 +132,7 @@ const Index = () =>{
             <td class="box-border border-b-2 border-gray-150 px-4 py-2 rounded-r-lg">
                 <div className="flex justify-center">
                     {/* check button */}
-                    <CheckWrapper todo={todo}/>
+                    <CheckWrapper todo={todo} fetchData={fetchData}/>
                     {/* end check button */}
 
                     {/* details */}
