@@ -17,12 +17,16 @@
     }
 }
 
+.details{
+    animation-play-state: initial;
+}
+
 /* Apply the zoom in and spin animation to the SVG when the button is hovered */
 .details-button:hover .details {
     animation: zoomInAndSpin 0.5s ease-in-out forwards;
 }
 
 /* Apply the zoom out and spin back animation to the SVG when the button is not hovered */
-.details-button:not(:hover) .details {
-    animation: zoomOutAndSpinBack 0.5s ease-in-out;
+.details-button:not(:hover) .details.animated {
+    animation: zoomOutAndSpinBack 0.5s ease-in-out backwards;
 }

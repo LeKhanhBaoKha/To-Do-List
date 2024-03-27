@@ -1,13 +1,24 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-import moment from 'moment'
 import { format } from 'date-fns';
 import './Details.css';
 function Details(todo){
+
+    function animatedDetail(event){
+        const detailButton = document.getElementById([todo['id'],"dt-button"].join(''));
+        detailButton.addEventListener('mouseover', () => {
+            // Add a class to the details element
+            const detailIcon = document.getElementById([todo['id'],"dt-icon"].join(''));
+            detailIcon.classList.add('animated');
+        });
+    }
+
     return <>
-        <button class={`${todo['id']}-modal font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 details-button`} id="dt-button" >
+        <button class={`${todo['id']}-modal font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 details-button`} id={[todo['id'],"dt-button"].join('')}
+
+         onMouseOver={(e)=>animatedDetail(e)}>
         <label for={[todo['id'],'-modal']} class="cursor-pointer rounded">
-            <FontAwesomeIcon icon={faPenToSquare} class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] details"/>
+            <FontAwesomeIcon icon={faPenToSquare} class="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] details " id={[todo['id'],"dt-icon"].join('')}/>
         </label>
         </button>
 
