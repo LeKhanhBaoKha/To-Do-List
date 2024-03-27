@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Check from "./function/check";
 import Details from "./function/details";
 import Edit from "./function/Edit";
+import Delete from "./function/Delete";
 const Index = () =>{
     const [todos, setTodos] = useState(null);
     const token = sessionStorage.getItem('token');
@@ -20,10 +21,15 @@ const Index = () =>{
         const details = Details(todo);
         return details;
     }
-    const EditWrapper = ({todo, data})=>{
-        const edit = Edit(todo, data);
+    const EditWrapper = ({todo, data, fetchData})=>{
+        const edit = Edit(todo, data, fetchData);
         return edit;
     }
+    const DeleteWrapper =({todo, fetchData})=>{
+        const deleteButton = Delete(todo, fetchData);
+        return deleteButton;
+    }
+
     const fetchData = async()=>{
         setIsLoading(true);
         setError(null);
@@ -56,7 +62,6 @@ const Index = () =>{
                 throw new Error(`Api request for projects failed with status ${response.status}`);
             }
             const responseData = await response.json();
-            console.log('responseData',responseData);
             setData(responseData);
             
         }catch(error){
@@ -67,14 +72,10 @@ const Index = () =>{
     useEffect(()=>{
         fetchData();
         fetchProjectsUsers();
-        const timerId = setInterval(fetchData, 60000); // Update every 60 seconds (1 minute)
-
+        const timerId = setInterval(fetchData, 600000); // Update every 600 seconds (10 minute)
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(timerId);
     },[]);
-    console.log('data:', data);
-    // console.log('data project:',data['projects']);
-    // console.log('data user:',data['users']);
     if (error) {
         return (        
         <div class="container mx-auto flex items-center justify-center h-[80vh]">
@@ -91,6 +92,7 @@ const Index = () =>{
             <p class="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Loading</p>
         </div>);
       }
+      console.log(todos);
 
     return(
         <div className="mx-auto rounded-2xl border bg-white p-2 w-[85%]">
@@ -128,55 +130,58 @@ const Index = () =>{
                         </thead>
                         <tbody>
 
-{    
-    todos.map((todo, index)=>
-    (
-        <tr class="hover:bg-green-50 transition duration-300 ease-in-out rounded-xl">
-            {/* name */}
-            <td class="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo['name']}</td>
+            {    
+                todos.map((todo, index)=>
+                (
+                    <tr class="hover:bg-green-50 transition duration-300 ease-in-out rounded-xl">
+                        {/* name */}
+                        <td class="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo['name']}</td>
 
-            {/* projectname */}
-            <td class="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo['project']['name']}</td>
+                        {/* projectname */}
+                        <td class="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo['project']['name']}</td>
 
-            {/* state */}
-            {todo['state'] == 1?
-            (
-                <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-center	">
-                        <p class="font-bold text-green-600 bg-green-50 rounded-lg">Complete</p>
-                </td>
-            ):(
-                <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-center	">
-                <p class="font-bold text-blue-600 bg-blue-50 rounded-lg">In process</p>
-                </td>
-            )}
-        
-            {/* belongsto */}
-            <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">
-              {todo['user']['name']}
-            </td>
+                        {/* state */}
+                        {todo['state'] == 1?
+                        (
+                            <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-center	">
+                                    <p class="font-bold text-green-600 bg-green-50 rounded-lg">Complete</p>
+                            </td>
+                        ):(
+                            <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-center	">
+                            <p class="font-bold text-blue-600 bg-blue-50 rounded-lg">In process</p>
+                            </td>
+                        )}
+                    
+                        {/* belongsto */}
+                        <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">
+                        {todo['user']['name']}
+                        </td>
 
-            {/* timeLeft */}
-            <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-left">
-                {renderTimeLeft(todo)}
-            </td>
+                        {/* timeLeft */}
+                        <td class="box-border border-b-2 border-gray-150 px-4 py-2 text-left">
+                            {renderTimeLeft(todo)}
+                        </td>
 
-            {/* function */}
-            <td class="box-border border-b-2 border-gray-150 px-4 py-2 rounded-r-lg">
-                <div className="flex justify-center">
-                    {/* check button */}
-                    <CheckWrapper todo={todo} fetchData={fetchData}/>
-                    {/* end check button */}
+                        {/* function */}
+                        <td class="box-border border-b-2 border-gray-150 px-4 py-2 rounded-r-lg">
+                            <div className="flex justify-center">
+                                {/* check button */}
+                                <CheckWrapper todo={todo} fetchData={fetchData}/>
+                                {/* end check button */}
 
-                    {/* details */}
-                    <DetailsWrapper todo={todo}/>
+                                {/* details */}
+                                <DetailsWrapper todo={todo}/>
 
-                    {/* edit */}
-                    <EditWrapper todo={todo} data={data}/>
-                </div>
-            </td>
-        </tr>
-    ))
-}
+                                {/* edit */}
+                                <EditWrapper todo={todo} data={data} fetchData={fetchData}/>
+                            
+                                {/* delete */}
+                                <DeleteWrapper todo={todo} fetchData={fetchData}/>
+                            </div>
+                        </td>
+                    </tr>
+                ))
+            }
                         </tbody>
                     </table>
                 </div>

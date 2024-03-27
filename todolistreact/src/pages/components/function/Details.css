@@ -1,0 +1,28 @@
+@keyframes zoomInAndSpin {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.3);
+    }
+}
+
+/* Define the animation for zoom out and spin back */
+@keyframes zoomOutAndSpinBack {
+    0% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1) ;
+    }
+}
+
+/* Apply the zoom in and spin animation to the SVG when the button is hovered */
+.details-button:hover .details {
+    animation: zoomInAndSpin 0.5s ease-in-out forwards;
+}
+
+/* Apply the zoom out and spin back animation to the SVG when the button is not hovered */
+.details-button:not(:hover) .details {
+    animation: zoomOutAndSpinBack 0.5s ease-in-out;
+}

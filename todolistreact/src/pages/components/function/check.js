@@ -4,7 +4,7 @@ import { useState } from 'react';
 function Check(todo, fetchData){
     const token = sessionStorage.getItem('token');
 
-    const [ completedata, setCompletedata] = useState({
+    const [completedata, setCompletedata] = useState({
         id: todo ? todo.id : '',
         state: 1,
     })

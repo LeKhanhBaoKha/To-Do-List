@@ -204,12 +204,7 @@
         console.log('delModal: ', delModal);
     }
     document.addEventListener('DOMContentLoaded', function () {
-       const closeButtons = document.querySelectorAll('.close-modal');
-       closeButtons.forEach(function (button) {
-         button.addEventListener('click', function () {
-           document.getElementById(delModal).checked = false;
-         });
-       });
+
     });
 
     //this is use for the select tag

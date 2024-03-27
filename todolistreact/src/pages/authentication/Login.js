@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+
 
 const Login = ()=>{
 
@@ -18,17 +20,17 @@ const Login = ()=>{
     const handleLogin = (event) => {
         event.preventDefault();       
         axios.post('http://localhost:8008/api/login', data).then((response) =>{
-            console.log("data:",response.data);
-            console.log("token:",response.data.authorisation.token);
+            // console.log("data:",response.data);
+            // console.log("token:",response.data.authorisation.token);
+            // console.log("response:", response.data.status);
             if(response.data.status == 'success'){
                 //Store user token in the session storage
                 sessionStorage.setItem('token', response.data.authorisation.token);
+                sessionStorage.setItem('user', response.data.user);
                 navigate('/index');
-            }else{
-                console.log('Login fail');
             }
         }).catch((error) =>{
-            console.log(error);
+            AlertError()
         })
     }
     return(
@@ -59,7 +61,7 @@ const Login = ()=>{
                         )
                         :
                         (
-                            <button class="bg-purple-500 hover:bg-purple-400 hover:cursor-pointer focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                            <button class="bg-purple-500 hover:bg-purple-400 hover:cursor-pointer focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition" type="submit">
                             Sign In
                             </button>
                         )
@@ -69,11 +71,21 @@ const Login = ()=>{
                         Forgot Password?
                         </a>
                     </div>
+                    <div className='hidden' id='Alert'>
+                        <Alert severity="error" className='mt-2'>Incorrect email or password! Please try again.</Alert>
+                    </div>
                     </form>
                 </div>
         </div>
     
     );
 }
+
+function AlertError(){
+    console.log("AlertError");
+    const AlertDiv = document.getElementById('Alert');
+    AlertDiv.classList.remove('hidden');
+}
+
 
 export default Login;
