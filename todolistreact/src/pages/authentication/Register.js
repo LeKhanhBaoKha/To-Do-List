@@ -14,7 +14,6 @@ const Register = ()=>{
 
     const handleRegister = (e) =>{
         e.preventDefault();
-        console.log('register data:', data);
         axios.post('http://localhost:8008/api/register', data).then((response)=>{
             if(response.data.status == 'success')
                 console.log("data:",response.data);
@@ -64,9 +63,6 @@ const Register = ()=>{
                             <button class="bg-purple-500 hover:bg-purple-400 hover:cursor-pointer focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "  type="submit">Sign up</button>
                         )
                     }
-                    
-
-
                     <a class="inline-block align-baseline font-bold text-sm text-purple-500 hover:text-purple-800" href="login">
                     Already have an account? Sign in
                     </a>

@@ -3,6 +3,7 @@ import { faCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react';
 function Check(todo, fetchData){
     const token = sessionStorage.getItem('token');
+    const current_page = sessionStorage.getItem('current_page');
 
     const [completedata, setCompletedata] = useState({
         id: todo ? todo.id : '',
@@ -25,7 +26,7 @@ function Check(todo, fetchData){
             body: JSON.stringify(completedata)
         }
         fetch('http://localhost:8008/api/serve/update', data).then(response=>response.json()).catch(error => console.error(error));
-        fetchData();
+        fetchData(current_page);
     }
 
     function handleInComplete(event){
@@ -39,7 +40,7 @@ function Check(todo, fetchData){
             body: JSON.stringify(incompletedata)
         }
         fetch('http://localhost:8008/api/serve/update', data).then(response=>response.json()).catch(error => console.error(error));
-        fetchData();
+        fetchData(current_page);
     }
 
     if(todo['state'] == 0){

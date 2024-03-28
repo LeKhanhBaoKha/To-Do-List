@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 function Delete(todo, fetchData){
     const token = sessionStorage.getItem('token');
+    const current_page = sessionStorage.getItem('current_page');
+    
     function closeDelModal(e){
         const delModal = [todo['id'],'-delmodal'].join('');
-        console.log(delModal);
         const closeButtons = document.querySelectorAll('.close-modal');
         closeButtons.forEach(function (button) {
          button.addEventListener('click', function () {
@@ -26,7 +27,7 @@ function Delete(todo, fetchData){
             body: JSON.stringify(id)
         }
         fetch('http://localhost:8008/api/serve/delete', dataToSend).then(response=>response.json()).catch(error => console.error(error));
-        fetchData();
+        fetchData(current_page);
     }
 
 

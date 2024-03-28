@@ -5,7 +5,9 @@ import './Edit.css';
 function Edit(todo, data, fetchData){
   const [selectedState, setSelectedState] = useState(todo['state']);
   const [editData, setEditData] = useState(todo);
+  
   const token = sessionStorage.getItem('token');
+  const current_page = sessionStorage.getItem('current_page');
 
   const handleNameChange = (e)=>{
     setEditData({...editData, name:e.target.value})
@@ -22,7 +24,7 @@ function Edit(todo, data, fetchData){
       body: JSON.stringify(editData)
     }
     fetch('http://localhost:8008/api/serve/update', dataToSend).then(response=>response.json()).catch(error => console.error(error));
-    fetchData();
+    fetchData(current_page);
   }
 
 
