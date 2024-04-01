@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
-import * as React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import * as React from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import Check from "./function/check";
 import Details from "./function/details";
 import Edit from "./function/Edit";
 import Delete from "./function/Delete";
 import Paging from "./Pagination";
+import Create from "./function/Create";
 const Index = () =>{
     const [todos, setTodos] = useState(null);
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem("token");
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState(null);
@@ -17,25 +18,30 @@ const Index = () =>{
 
     const CheckWrapper = ({todo, fetchData})=>{
         const check = Check(todo, fetchData);
-        return check
+        return check;
     };
     const DetailsWrapper = ({todo})=>{
         const details = Details(todo);
         return details;
-    }
+    };
     const EditWrapper = ({todo, data, fetchData})=>{
         const edit = Edit(todo, data, fetchData);
         return edit;
-    }
+    };
     const DeleteWrapper =({todo, fetchData})=>{
         const deleteButton = Delete(todo, fetchData);
         return deleteButton;
-    }
+    };
 
     const PaginationWrapper = ({links, fetchData})=>{
         const pagination = Paging(links, fetchData);
         return pagination;
-    }
+    };
+
+    const CreateWrapper = ({data, fetchData})=>{
+        const create = Create(data, fetchData);
+        return create;
+    };
 
     const fetchData = async(url)=>{
         setIsLoading(true);
@@ -50,19 +56,23 @@ const Index = () =>{
                 throw new Error(`Api request failed with status ${response.status}`);
             }
             const responseData = await response.json();
-            console.log('responseData', responseData);
+            console.log("responseData", responseData);
             setTodos(responseData.data);
             setLinks(responseData);
+            
         }catch(error){
             setError(error.message);
         }finally{
             setIsLoading(false);
         }
-    }
+    };
+
+
+
 
     const fetchProjectsUsers = async()=>{
         try{
-            const response = await fetch('http://localhost:8008/api/serve/createData',{
+            const response = await fetch("http://localhost:8008/api/serve/createData",{
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -76,20 +86,26 @@ const Index = () =>{
         }catch(error){
             setError(error.message);
         }
+    };
+
+    function selectState(event){
+        var url = event.target.value;
+        fetchData(url);
     }
 
-    function selectState(){
-        var x = document.getElementById("mySelect").value;
-        console.log(x);
-    }
+    const fetchInitialData = async () => {
+        sessionStorage.setItem("current_page", "http://localhost:8008/api/serve/index");
+        await fetchData("http://localhost:8008/api/serve/index");
+        await fetchProjectsUsers();
+      };
+    
 
     useEffect(()=>{
-        sessionStorage.setItem('current_page', 'http://localhost:8008/api/serve/index');
-        fetchData('http://localhost:8008/api/serve/index');
-        fetchProjectsUsers();
-        const timerId = setInterval(fetchData, 600000); // Update every 600 seconds (10 minute)
-        // Cleanup function to clear the interval when the component unmounts
-        return () => clearInterval(timerId);
+        fetchInitialData();
+        // const timerId = setInterval(fetchData, 600000); // Update every 600 seconds (10 minute)
+        // // Cleanup function to clear the interval when the component unmounts
+        // return () => clearInterval(timerId);
+
     },[]);
     if (error) {
         return (
@@ -101,15 +117,16 @@ const Index = () =>{
       if (!todos) {
         return (
         <div className="container mx-auto flex items-center justify-center h-[80vh]">
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: "flex" }}>
             <CircularProgress />
             </Box>
             <p className="font-bold py-2 px-4 rounded text-gray-600 text-lg	">Loading</p>
         </div>);
       }
-      
+
     return(
-        <div className="mx-auto rounded-2xl border bg-white p-2 w-[85%]">
+        <div className="index">
+    <div className="mx-auto rounded-2xl border bg-white p-2 w-[85%] mb-4" id="index">
         {
             todos != null ?
             (
@@ -117,16 +134,25 @@ const Index = () =>{
                     <div className="lg:w-[1500px] md:w-[800px] m-auto">
                         <div className="max-w-sm my-4 inline-block">
                             <label htmlFor="index_select" className="mb-2 block text-sm font-medium text-gray-900">Select an option</label>
-                            <select id="index_select" className="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onChange={selectState}>
-                            <option value='http://localhost:8008/api/serve/index'>All</option>
-                            <option value="http://localhost:8008/api/serve/completed">Completed</option>
-                            <option value="http://localhost:8008/api/serve/inprocess">In process</option>
+                            <select id="index_select" className="block w-full rounded-lg border border-gray-400 bg-gray-50 p-2.5 text-sm text-gray-600 focus:border-purple-400 focus:ring-purple-400" onChange={(e)=>selectState(e)}>
+                            <option defaultValue="http://localhost:8008/api/serve/index">All</option>
+                            <option defaultValue="http://localhost:8008/api/serve/completed">Completed</option>
+                            <option defaultValue="http://localhost:8008/api/serve/inprocess">In process</option>
                             </select>
                         </div>
 
                         <div className="inline-block ml-2">
                             <a href="todaytask" className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none ">Today&apos;s task</a>
                         </div>
+
+                        <div className="inline-block ml-2">
+                            <a className="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none ">
+                                <label htmlFor="create" className="cursor-pointer rounded">Create</label>
+                            </a>
+                        </div>
+                        
+                      
+                        
                     </div>
 
                     <table className="table-auto lg:w-[1500px] md:w-[800px] m-auto mb-5">
@@ -135,7 +161,7 @@ const Index = () =>{
                             <th className="px-4 py-2 rounded-l-lg" >Todo name</th>
                             <th className="px-4 py-2 lg:table-cell">Project name</th>
                             <th className="px-4 py-2">state </th>
-                            <th className="px-4 py-2 {{$userinfo['is_admin'] == 1 ? '':'hidden'}}">Belongs to</th>
+                            <th className="px-4 py-2">Belongs to</th>
                             <th className="px-4 py-2">Time left</th>
 
                             <th className="px-4 py-2 rounded-r-lg">function</th>
@@ -148,13 +174,13 @@ const Index = () =>{
                 (
                     <tr key={todo["id"]} className="hover:bg-green-50 transition duration-300 ease-in-out rounded-xl">
                         {/* name */}
-                        <td className="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo['name']}</td>
+                        <td className="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo["name"]}</td>
 
                         {/* projectname */}
-                        <td className="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo['project']['name']}</td>
+                        <td className="box-border border-b-2 border-gray-150  px-4 py-2 text-justify rounded-l-lg">{todo["project"]["name"]}</td>
 
                         {/* state */}
-                        {todo['state'] == 1?
+                        {todo["state"] == 1?
                         (
                             <td className="box-border border-b-2 border-gray-150 px-4 py-2 text-center w-[120px]">
                                     <p className="font-bold text-green-600 bg-green-50 rounded-lg">Complete</p>
@@ -167,7 +193,7 @@ const Index = () =>{
 
                         {/* belongsto */}
                         <td className="box-border border-b-2 border-gray-150 px-4 py-2 text-justify">
-                        {todo['user']['name']}
+                        {todo["user"]["name"]}
                         </td>
 
                         {/* timeLeft */}
@@ -198,8 +224,9 @@ const Index = () =>{
                         </tbody>
                     </table>
 
+                    <CreateWrapper data={data} fetchData={fetchData}/>
                     {/* Pagination */}
-                    <div className="lg:w-[1500px] md:w-[800px] m-auto mb-4">
+                    <div className="lg:w-[1500px] md:w-[800px] m-auto z-[1000] mb-4">
                         <PaginationWrapper links={links} fetchData={fetchData}/>
                     </div>
                 </div>
@@ -212,6 +239,8 @@ const Index = () =>{
             )
         }
         </div>
+        </div>
+       
     )
 }
 
@@ -219,7 +248,7 @@ function renderTimeLeft(todo){
     if(todo.timeLeft == 0){
         return <>
             <p className="font-bold text-red-600 bg-red-50 rounded-lg text-center w-[80px] m-auto">Time&apos;s up</p>
-        </>
+        </>;
     }else{
         if(todo.timeLeft <60){
             return <>{todo.timeLeft} minutes</>;
@@ -227,7 +256,7 @@ function renderTimeLeft(todo){
         else if(todo.timeLeft < 1440){
             return <>
             {Math.floor(todo.timeLeft/60)} hours {todo.timeLeft%60} minutes
-            </>
+            </>;
         }
         else{
             let days = Math.floor(todo.timeLeft/1440);
@@ -245,7 +274,7 @@ function renderTimeLeft(todo){
             if(minutes != 0){
                 totalTimeLeft.push(`${minutes} minutes`);
             }
-            return <>{totalTimeLeft.join(' ')}</>;
+            return <>{totalTimeLeft.join(" ")}</>;
         }
     }
 }

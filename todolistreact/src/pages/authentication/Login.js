@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import Alert from '@mui/material/Alert';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { resolvePath, useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 import React from "react";
 
 
@@ -9,9 +9,9 @@ const Login = ()=>{
 
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [data, setData] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [data, setData] = useState("");
 
     useEffect(()=>{
         const info ={ email:email, password: password };
@@ -19,42 +19,49 @@ const Login = ()=>{
     },[email, password]);
 
     const handleLogin = (event) => {
-        event.preventDefault();       
-        axios.post("http://localhost:8008/api/login", data).then((response) =>{
-            // console.log("data:",response.data);
-            // console.log("token:",response.data.authorisation.token);
-            // console.log("response:", response.data.status);
-            if(response.data.status == 'success'){
-                //Store user token in the session storage
-                sessionStorage.setItem('token', response.data.authorisation.token);
-                sessionStorage.setItem('user', response.data.user);
-                navigate('/index');
-            }
-        }).catch(() =>{
-            AlertError()
+        event.preventDefault();
+      
+        fetch("http://localhost:8008/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         })
-    }
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              sessionStorage.setItem("token", data.authorisation.token);
+              sessionStorage.setItem("user", data.user);
+              navigate("/index");
+            }
+          })
+          .catch(() => {
+            AlertError();
+          });
+      };
+
     return(
         <div className="mx-auto rounded-2xl border bg-white p-2 shadow-sm w-[600px] mt-[100px]">
             <div className="flex justify-center items-center content-center h-[340px] px-4">
-                    <htmlForm className="sm:w-[500px] md:w-[600px] px-8 pt-6 pb-8 h-[280px]" method="" action="" onSubmit={handleLogin}>
+                    <form className="sm:w-[500px] md:w-[600px] px-8 pt-6 pb-8 h-[280px]" method="" action="" onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                         Email
                         </label>
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="email" name="email" value={email} required onChange={(e)=>setEmail(e.target.value)}/>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="email" name="email" defaultValue={email} required onChange={(e)=>setEmail(e.target.value)}/>
                         <span className="error-message hidden">This field is required.</span>
                     </div>
                     <div className="mb-6">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                         Password
                         </label>
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" name="password" value={password} onChange={(e)=>setPassword(e.target.value)} required/>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" name="password" defaultValue={password} onChange={(e)=>setPassword(e.target.value)} required/>
                     </div>
                     <div className="flex items-center justify-between">
 
                     {
-                        email == '' || password == '' ?
+                        email == "" || password == "" ?
                         (
                             <button className="bg-purple-400 focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled type="submit">
                             Sign In
@@ -72,20 +79,20 @@ const Login = ()=>{
                         htmlForgot Password?
                         </a>
                     </div>
-                    <div className='hidden' id='Alert'>
-                        <Alert severity="error" className='mt-2'>Incorrect email or password! Please try again.</Alert>
+                    <div className="hidden" id="Alert">
+                        <Alert severity="error" className="mt-2">Incorrect email or password! Please try again.</Alert>
                     </div>
-                    </htmlForm>
+                    </form>
                 </div>
         </div>
     
     );
-}
+};
 
 function AlertError(){
     console.log("AlertError");
-    const AlertDiv = document.getElementById('Alert');
-    AlertDiv.classNameList.remove('hidden');
+    const AlertDiv = document.getElementById("Alert");
+    AlertDiv.classNameList.remove("hidden");
 }
 
 

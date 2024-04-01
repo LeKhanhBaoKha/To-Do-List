@@ -1,30 +1,30 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react';
-import './Edit.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import "./Edit.css";
 import React from "react";
 function Edit(todo, data, fetchData){
-  const [selectedState, setSelectedState] = useState(todo['state']);
+  const [selectedState, setSelectedState] = useState(todo["state"]);
   const [editData, setEditData] = useState(todo);
   
-  const token = sessionStorage.getItem('token');
-  const current_page = sessionStorage.getItem('current_page');
+  const token = sessionStorage.getItem("token");
+  const current_page = sessionStorage.getItem("current_page");
 
   const handleNameChange = (e)=>{
-    setEditData({...editData, name:e.target.value})
-  }
+    setEditData({...editData, name:e.target.value});
+  };
 
   function handleEditSubmit(event){
     event.preventDefault();
     const dataToSend = {
-      method: 'PATCH',
+      method: "PATCH",
       headers:{
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(editData)
-    }
-    fetch('http://localhost:8008/api/serve/update', dataToSend).then(response=>response.json()).catch(error => console.error(error));
+    };
+    fetch("http://localhost:8008/api/serve/update", dataToSend).then(response=>response.json()).catch(error => console.error(error));
     fetchData(current_page);
   }
 
@@ -33,16 +33,16 @@ function Edit(todo, data, fetchData){
     const {projects, users} = data;
     return(<>
         <button className="font-bold py-1 px-2 rounded bg-purple-500  text-white mr-2 editButton">
-            <label htmlFor={[todo['id'],'-editmodal'].join('')}  className="cursor-pointer rounded">
+            <label htmlFor={[todo["id"],"-editmodal"].join("")}  className="cursor-pointer rounded">
             <FontAwesomeIcon icon={faGear} className="sm:w-[15px] sm:h-[19px] md:w-[20px] md:h-[24px] lg:w-[30px] lg:h-[34px] gear"/>
             </label>
         </button>
         <div className="z-10">
-        <input type="checkbox" id={[todo['id'],'-editmodal'].join('')} className="peer fixed appearance-none opacity-0" />
-        <label htmlFor={[todo['id'],'-editmodal'].join('')}  className="pointer-events-none invisible fixed inset-0 flex cursor-pointer items-center justify-center overflow-hidden overscroll-contain bg-slate-700/30 opacity-0 transition-all duration-[0.5s] ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100">
+        <input type="checkbox" id={[todo["id"],"-editmodal"].join("")} className="peer fixed appearance-none opacity-0" />
+        <label htmlFor={[todo["id"],"-editmodal"].join("")}  className="pointer-events-none invisible fixed inset-0 flex cursor-pointer items-center justify-center overflow-hidden overscroll-contain bg-slate-700/30 opacity-0 transition-all duration-[0.5s] ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:scale-100">
         <label className="max-h-[calc(100vh - 5em)] scale-99 h-fit max-w-[80%] overflow-auto overscroll-contain rounded-md bg-white p-6 text-black shadow-2xl transition" htmlFor="">
             <form className="w-[600px] m-auto px-4 py-4" action="" method="" onSubmit={handleEditSubmit} >
-                <input type="hidden" name="id" value={todo['id']} style={{display:'none'}}/>
+                <input type="hidden" name="id" defaultValue={todo["id"]} style={{display:"none"}}/>
     
                 <div className="flex items-center mb-6">
                   <div className="w-1/5">
@@ -51,7 +51,7 @@ function Edit(todo, data, fetchData){
                     </label>
                   </div>
                   <div className="w-4/5">
-                    <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="todo name" type="text" value={editData['name']} onChange={(e)=>handleNameChange(e)} name="name"/>
+                    <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="todo name" type="text" defaultValue={editData["name"]} onChange={(e)=>handleNameChange(e)} name="name"/>
                   </div>
                 </div>
     
@@ -62,7 +62,7 @@ function Edit(todo, data, fetchData){
                     </label>
                   </div>
                   <div className="w-4/5">
-                    <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="description" type="text" name="description" value={editData['description']} onChange={(e)=> setEditData({...editData, description:e.target.value})}/>
+                    <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="description" type="text" name="description" defaultValue={editData["description"]} onChange={(e)=> setEditData({...editData, description:e.target.value})}/>
                   </div>
                 </div>
     
@@ -74,8 +74,8 @@ function Edit(todo, data, fetchData){
                     </div>
                     <div className="w-4/5">
                         <select name="project_id" id="project_id" onChange={(e)=>setEditData({...editData, project_id:e.target.value})} >
-                            <option value={editData['project']['id']}>{editData['project']['name']}</option>
-                            <ProjectsSelect data={projects} todoProjectName={editData['project']['name']}/>
+                            <option defaultValue={editData["project"]["id"]}>{editData["project"]["name"]}</option>
+                            <ProjectsSelect data={projects} todoProjectName={editData["project"]["name"]}/>
                         </select>
                     </div>
                   </div>
@@ -88,8 +88,8 @@ function Edit(todo, data, fetchData){
                     </div>
                     <div className="w-4/5">
                         <select name="user_id" id="user_id" onChange={(e)=>setEditData({...editData, user_id:e.target.value})}>
-                            <option value={editData['user']['id']} selected>{editData['user']['name']}</option>
-                            <UsersSelect data={users} username={editData['user']['name']} />
+                            <option defaultValue={editData["user"]["id"]} selected>{editData["user"]["name"]}</option>
+                            <UsersSelect data={users} username={editData["user"]["name"]} />
                         </select>
                     </div>
                   </div>
@@ -101,7 +101,7 @@ function Edit(todo, data, fetchData){
                       </label>
                     </div>
                     <div className="w-4/5">
-                      <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="deadline" type="datetime-local" name="deadline" value={editData['deadline']} onChange={(e)=>{setEditData({...editData, deadline:e.target.value})}}/>
+                      <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="deadline" type="datetime-local" name="deadline" defaultValue={editData["deadline"]} onChange={(e)=>{setEditData({...editData, deadline:e.target.value});}}/>
                     </div>
                   </div>
     
@@ -113,10 +113,10 @@ function Edit(todo, data, fetchData){
                     </div>
                     <div className="w-[80%] flex pb-3 gap-4">
                         <div className="flex items-center mb-4">
-                            <input type="radio" name="state" value="0" className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" aria-labelledby="state-option-1" aria-describedby="state-option-1"  
-                            id={['inprocess',editData['id']].join('')}
+                            <input type="radio" name="state" defaultValue="0" className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" aria-labelledby="state-option-1" aria-describedby="state-option-1"  
+                            id={["inprocess",editData["id"]].join("")}
                             checked={selectedState == 0}
-                            onChange={(e)=>{setSelectedState(e.target.value); setEditData({...editData, state:e.target.value})}
+                            onChange={(e)=>{setSelectedState(e.target.value); setEditData({...editData, state:e.target.value});}
                               }
                             />
                             <label htmlFor="state-option-1" className="text-sm font-medium text-gray-900 ml-2 block" >
@@ -124,10 +124,10 @@ function Edit(todo, data, fetchData){
                             </label>
                         </div>
                         <div className="flex items-center mb-4">
-                            <input type="radio" name="state" value="1" className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" aria-labelledby="state-option-2" aria-describedby="state-option-2" 
-                            id={['complete',editData['id']].join('')}
+                            <input type="radio" name="state" defaultValue="1" className="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300" aria-labelledby="state-option-2" aria-describedby="state-option-2" 
+                            id={["complete",editData["id"]].join("")}
                             checked={selectedState == 1}
-                            onChange={(e)=>{setSelectedState(e.target.value); setEditData({...editData, state:e.target.value})}}
+                            onChange={(e)=>{setSelectedState(e.target.value); setEditData({...editData, state:e.target.value});}}
                             />
                             <label htmlFor="state-option-2" className="text-sm font-medium text-gray-900 ml-2 block">
                             Complete
@@ -152,7 +152,7 @@ function Edit(todo, data, fetchData){
 
 
 }
-export default Edit
+export default Edit;
 
 function ProjectsSelect({data, todoProjectName}){
     return (
@@ -176,7 +176,7 @@ function UsersSelect({data, username}){
     return(<>
     {
         data.map((user,index)=>{
-            if(username == user['Name'])
+            if(username == user["Name"])
             {
                 return null;
             }
@@ -190,5 +190,5 @@ function UsersSelect({data, username}){
             }
         })
     }
-    </>)
+    </>);
 }

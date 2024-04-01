@@ -2,11 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import React from "react";
 const Register = ()=>{
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [repassword, setRepassord] = useState('');
-    const [data, setData] = useState('');
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [repassword, setRepassord] = useState("");
+    const [data, setData] = useState("");
 
     useEffect(()=>{
         setData({name:name, email:email, password: password});
@@ -14,19 +14,19 @@ const Register = ()=>{
 
     const handleRegister = (e) =>{
         e.preventDefault();
-        axios.post('http://localhost:8008/api/register', data).then((response)=>{
-            if(response.data.status == 'success')
+        axios.post("http://localhost:8008/api/register", data).then((response)=>{
+            if(response.data.status == "success")
                 console.log("data:",response.data);
             else{
-                console.log('register fail');
+                console.log("register fail");
             }
         }).catch((error) =>{
             console.log(error);
-        })
-    }
+        });
+    };
     return(
         <div className="mx-auto rounded-2xl border bg-white p-2 shadow-sm w-[600px] mt-[100px]">
-            <htmlForm className="sm:w-[300px] md:w-[500px] bg-white px-8 pt-6 pb-8 mb-4 m-auto" method="" action="" onSubmit={handleRegister}>
+            <form className="sm:w-[300px] md:w-[500px] bg-white px-8 pt-6 pb-8 mb-4 m-auto" method="" action="" onSubmit={handleRegister}>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
                     Name
@@ -57,7 +57,7 @@ const Register = ()=>{
                 <div className="flex items-center justify-between">
 
                     {
-                        name == '' || email == '' || password == '' || repassword == '' ?(
+                        name == "" || email == "" || password == "" || repassword == "" ?(
                         <button className="bg-purple-400  focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline " disabled type="submit">Sign up</button>
                         ):(
                             <button className="bg-purple-500 hover:bg-purple-400 hover:cursor-pointer focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "  type="submit">Sign up</button>
@@ -67,10 +67,10 @@ const Register = ()=>{
                     Already have an account? Sign in
                     </a>
                 </div>
-            </htmlForm>
+            </form>
         </div>
     
     );
-}
+};
 
 export default Register;

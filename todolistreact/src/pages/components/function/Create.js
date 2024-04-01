@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 function Create(data, fetchData){
     const token = sessionStorage.getItem("token");
     const current_page = sessionStorage.getItem("current_page");
@@ -11,24 +11,28 @@ function Create(data, fetchData){
         deadline:null,
     }); 
 
-    const fetchProjectsUsers = async()=>{
-        try{
-            const response = await fetch("http://localhost:8008/api/serve/createData",{
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if(!response.ok){
-                throw new Error(`Api request htmlFor projects failed with status ${response.status}`);
+
+    useEffect(()=>{
+        const fetchProjectsUsers = async()=>{
+            try{
+                const response = await fetch("http://localhost:8008/api/serve/createData",{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if(!response.ok){
+                    throw new Error(`Api request htmlFor projects failed with status ${response.status}`);
+                }
+                const responseData = await response.json();
+                setPu(responseData);
+    
+            }catch(error){
+                console.log("create error:",error.message);
             }
-            const responseData = await response.json();
-            setPu(responseData);
-
-        }catch(error){
-            console.log("create error:",error.message);
-        }
-    };
-
+        };
+        fetchProjectsUsers();
+    },[]);
+    console.log('pu', pu);
 
     function handleCreate(event){
         event.preventDefault();
@@ -45,44 +49,9 @@ function Create(data, fetchData){
           fetchData(current_page);
     }
 
-    function ProjectsSelect({data}){
-        return (
-            <>
-              {data.map((project, index) => {
-                if(index == 0){
-                    return (
-                        <option key={index} value={project.id}>{project.name}</option>);
-                }
-                else{
-                    return (
-                        <option key={index} value={project.id}>{project.name}</option>);
-                }
-                
-              })
-              }
-            </>
-        );
-    }
-    
-    function UsersSelect({data}){
-        return(<>
-        {
-            data.map((user,index)=>{
-                return (
-                    <option key={index} value={user.id}>
-                        {user.name}
-                    </option>);
-            })
-        }
-        </>);
-    }
 
 
-    if(data !== null)
-    {
-        const {projects, users} = data;
 
-        // console.log('users',users[0]["id"]);
         return (<>
         <div className="z-[1500]">
         <input type="checkbox" id="create" className="peer fixed appearance-none opacity-0" />
@@ -120,7 +89,7 @@ function Create(data, fetchData){
                     </div>
                     <div className="w-4/5">
                         <select name="project_id" id="project_id" onChange={(e)=>setCreateData({...createData, project_id:e.target.value})}>
-                            <ProjectsSelect data={projects}/>
+                            {/* <ProjectsSelect data={pu['projects']}/> */}
                         </select>
                     </div>
                   </div>
@@ -133,7 +102,7 @@ function Create(data, fetchData){
                     </div>
                     <div className="w-4/5">
                         <select name="user_id" id="user_id" onChange={(e)=>setCreateData({...createData, user_id:e.target.value})}>
-                            <UsersSelect data={users}/>
+                            {/* <UsersSelect data={pu['users']}/> */}
                         </select>
                     </div>
                   </div>
@@ -163,10 +132,41 @@ function Create(data, fetchData){
     </div>
         
     </>);
-    }
-
 }
 
+
+
+function ProjectsSelect({data}){
+    return (
+        <>
+          {data.map((project, index) => {
+            if(index == 0){
+                return (
+                    <option key={index} defaultValue={project.id}>{project.name}</option>);
+            }
+            else{
+                return (
+                    <option key={index} defaultValue={project.id}>{project.name}</option>);
+            }
+            
+          })
+          }
+        </>
+    );
+}
+
+function UsersSelect({data}){
+    return(<>
+    {
+        data.map((user,index)=>{
+            return (
+                <option key={index} defaultValue={user.id}>
+                    {user.name}
+                </option>);
+        })
+    }
+    </>);
+}
 
 
 export default Create;
