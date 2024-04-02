@@ -167,8 +167,11 @@ const Index = () => {
 
               <div className="inline-block ml-2">
                 <a
-                  href="todaytask"
+                  href="#"
                   className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none "
+                  onClick={(e) =>
+                    fetchData("http://localhost:8008/api/serve/todaytask")
+                  }
                 >
                   Today&apos;s task
                 </a>

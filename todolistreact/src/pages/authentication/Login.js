@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { resolvePath, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import React from "react";
@@ -10,11 +10,21 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [data, setData] = useState("");
+  const alert = useRef(null);
+  const form = useRef(null);
 
   useEffect(() => {
     const info = { email: email, password: password };
     setData(info);
   }, [email, password]);
+
+  function AlertError() {
+    console.log("AlertError");
+    if (alert.current) {
+      alert.current.classList.remove("hidden");
+      form.current.classList.add("h-[300px]");
+    }
+  }
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -32,6 +42,8 @@ const Login = () => {
           sessionStorage.setItem("token", data.authorisation.token);
           sessionStorage.setItem("user", data.user);
           navigate("/index");
+        } else {
+          AlertError();
         }
       })
       .catch(() => {
@@ -43,10 +55,11 @@ const Login = () => {
     <div className="flex justify-center items-center h-[80vh]">
       <div className="mx-auto rounded-2xl border bg-white p-2 shadow-sm w-[600px]">
         <form
-          className="sm:w-[500px] md:w-[600px] px-8 pt-6 pb-8 h-[280px]"
+          className="sm:w-[500px] md:w-[600px] px-8 pt-6 pb-8"
           method=""
           action=""
           onSubmit={handleLogin}
+          ref={form}
         >
           <div className="mb-4">
             <label
@@ -69,7 +82,8 @@ const Login = () => {
               This field is required.
             </span>
           </div>
-          <div className="mb-6">
+
+          <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
@@ -87,7 +101,8 @@ const Login = () => {
               required
             />
           </div>
-          <div className="flex items-center justify-between">
+
+          <div className="flex items-center justify-between mb-2">
             {email == "" || password == "" ? (
               <button
                 className="bg-purple-400 focus:shadow-outline text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -109,10 +124,10 @@ const Login = () => {
               className="inline-block align-baseline font-bold text-sm text-purple-500 hover:text-purple-800"
               href="#"
             >
-              htmlForgot Password?
+              Forgot Password?
             </a>
           </div>
-          <div className="hidden" id="Alert">
+          <div className="hidden" id="Alert" ref={alert}>
             <Alert severity="error" className="mt-2">
               Incorrect email or password! Please try again.
             </Alert>
@@ -122,11 +137,5 @@ const Login = () => {
     </div>
   );
 };
-
-function AlertError() {
-  console.log("AlertError");
-  const AlertDiv = document.getElementById("Alert");
-  AlertDiv.classNameList.remove("hidden");
-}
 
 export default Login;

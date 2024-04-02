@@ -12,7 +12,7 @@ const Layout = () => {
         const containsLogin = currentUrl.includes("login");
         const containsRegister = currentUrl.includes("register");
 
-        if (containsLogin || containsRegister) {
+        if (containsLogin || containsRegister || currentUrl.includes("")) {
           footerElement.classList.add("footer");
         } else {
           footerElement.classList.remove("footer");
