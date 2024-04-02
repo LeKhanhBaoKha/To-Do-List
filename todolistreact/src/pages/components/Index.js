@@ -11,12 +11,12 @@ import Create from "./function/Create";
 import "./Index.css";
 const Index = () => {
   const [todos, setTodos] = useState(null);
-  const token = sessionStorage.getItem("token");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
   const [links, setLinks] = useState(null);
-
+  const token = sessionStorage.getItem("token");
+  // Wrapper for functions
   const CheckWrapper = ({ todo, fetchData }) => {
     const check = Check(todo, fetchData);
     return check;
@@ -43,6 +43,7 @@ const Index = () => {
     const create = Create(data, fetchData);
     return create;
   };
+  // end wrapper for function
 
   const fetchData = async (url) => {
     setIsLoading(true);

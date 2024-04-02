@@ -83,7 +83,7 @@ const Login = () => {
             </span>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-2">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
@@ -128,7 +128,7 @@ const Login = () => {
             </a>
           </div>
           <div className="hidden" id="Alert" ref={alert}>
-            <Alert severity="error" className="mt-2">
+            <Alert severity="error" className="mb-0">
               Incorrect email or password! Please try again.
             </Alert>
           </div>

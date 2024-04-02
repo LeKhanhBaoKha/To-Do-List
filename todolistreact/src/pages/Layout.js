@@ -1,27 +1,51 @@
-import { Outlet, useLocation } from "react-router-dom";
-import React, { useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { useState } from "react";
 const Layout = () => {
+  const navigate = useNavigate();
+
+  // Handling footer
+  const footerRef = useRef(null);
+  var footerClass = "bg-gray-800 shadow";
+  const currentUrl = window.location.href;
   const location = useLocation();
 
-  useEffect(() => {
-    const handleFooterClass = () => {
-      const footerElement = document.getElementById("footer");
+  // getting token then check of the user is login
+  var token = sessionStorage.getItem("token");
+  var user = sessionStorage.getItem("user");
 
-      if (footerElement) {
-        const currentUrl = window.location.href;
-        const containsLogin = currentUrl.includes("login");
-        const containsRegister = currentUrl.includes("register");
+  if (
+    currentUrl.includes("login") ||
+    currentUrl.includes("register") ||
+    currentUrl.includes("")
+  ) {
+    footerClass = "bg-gray-800 shadow footer";
+  }
 
-        if (containsLogin || containsRegister || currentUrl.includes("")) {
-          footerElement.classList.add("footer");
+  function handleLogout() {
+    fetch("http://localhost:8008/api/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          sessionStorage.clear();
+          token = null;
+          user = null;
+          navigate("/login");
         } else {
-          footerElement.classList.remove("footer");
+          console.log("fail to logout");
         }
-      }
-    };
+      })
+      .catch(() => {
+        console.log("fail to fetch logout");
+      });
+  }
 
-    handleFooterClass();
-  }, [location.pathname]); // Re-run the effect whenever the URL path changes
   return (
     <>
       <div className="roboto-regular h-screen bg-gradient-to-br from-pink-50 to-indigo-100 overflow-auto">
@@ -48,12 +72,22 @@ const Layout = () => {
                       Register
                     </a>
 
-                    <a
-                      href="login"
-                      className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out  text-gray-100"
-                    >
-                      Login
-                    </a>
+                    {user != null ? (
+                      <a
+                        href="#"
+                        className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out  text-gray-100"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </a>
+                    ) : (
+                      <a
+                        href="login"
+                        className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out  text-gray-100"
+                      >
+                        Login
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
@@ -63,7 +97,7 @@ const Layout = () => {
 
         <Outlet />
 
-        <footer className="bg-gray-800 shadow" id="footer">
+        <footer className={footerClass} id="footer">
           <div className="w-full mx-auto max-w-screen-xl p-2` md:flex md:items-center md:justify-between">
             <p className="text-gray-300 rounded-md px-3 py-2 text-sm font-medium">
               @copy right: lekhanhbaokha@gmail.com

@@ -45,9 +45,9 @@ Route::get('serve/projects', [ApiProjectController::class, 'index']);
 Route::post('serve/createProject', [ApiProjectController::class, 'store']);
 //
 Route::post('serve/deleteProject', [ApiProjectController::class, 'destroy']);
-Route::controller(AuthController::class)->group(function(){
-    Route::post('login', 'login' );
-    ROute::post('register','register');
-    ROute::post('logout','logout');
-    ROute::post('refresh','refresh');
+Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
+    Route::post('register', 'register');
+    Route::post('logout', 'logout');
+    Route::post('refresh', 'refresh');
 });
