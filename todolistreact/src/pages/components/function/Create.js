@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-function Create(data, fetchData) {
+function Create({ data, fetchData }) {
   const token = sessionStorage.getItem("token");
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const current_page = sessionStorage.getItem("current_page");
   const [createData, setCreateData] = useState({
     name: null,
     description: null,
     project_id: data["projects"][0]["id"],
-    user_id: data["users"][0]["id"],
+    user_id: user["id"],
     deadline: null,
   });
-
-  console.log("create data", data["projects"][0]);
 
   function handleCreate(event) {
     event.preventDefault();
@@ -126,7 +125,11 @@ function Create(data, fetchData) {
                 </div>
               </div>
 
-              <div className="flex items-center mb-6">
+              <div
+                className={`flex items-center mb-6 ${
+                  user["is_admin"] == 0 && "md:hidden"
+                }`}
+              >
                 <div className="w-1/5">
                   <label
                     className="block text-gray-500 font-bold text-left "

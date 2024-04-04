@@ -17,12 +17,13 @@ const Layout = () => {
   if (
     currentUrl.includes("login") ||
     currentUrl.includes("register") ||
-    currentUrl.includes("")
+    currentUrl == "http://localhost:3000/"
   ) {
     footerClass = "bg-gray-800 shadow footer";
   }
 
-  function handleLogout() {
+  function handleLogout(event) {
+    event.preventDefault();
     fetch("http://localhost:8008/api/logout", {
       method: "POST",
       headers: {
@@ -76,7 +77,7 @@ const Layout = () => {
                       <a
                         href="#"
                         className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out  text-gray-100"
-                        onClick={handleLogout}
+                        onClick={(e) => handleLogout(e)}
                       >
                         Logout
                       </a>

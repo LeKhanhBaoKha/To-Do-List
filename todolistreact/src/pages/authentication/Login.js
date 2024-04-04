@@ -39,8 +39,9 @@ const Login = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
+          console.log(data.user);
           sessionStorage.setItem("token", data.authorisation.token);
-          sessionStorage.setItem("user", data.user);
+          sessionStorage.setItem("user", JSON.stringify(data.user));
           navigate("/index");
         } else {
           AlertError();

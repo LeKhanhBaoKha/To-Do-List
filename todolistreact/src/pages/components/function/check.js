@@ -3,7 +3,7 @@ import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import React from "react";
 
-function Check(todo, fetchData) {
+function Check({ todo, fetchData }) {
   const token = sessionStorage.getItem("token");
   const current_page = sessionStorage.getItem("current_page");
 
