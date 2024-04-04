@@ -2,7 +2,7 @@ You have to use xampp with php verion >= 8.2
 use this to run the backend with  xamp php -S localhost:8008 -t public
 
 in the frontend run yarn watch and npm run dev to build tailwindcss
-
+I use jwt auth of PHP-Open-Source-Saver to authenticate user
 I use a font awsome package for Laravel called owenvoke/blade-fontawesome
 you need to run composer require owenvoke/blade-fontawesome
 and after that run php artisan vendor:publish --tag=blade-fontawesome-config
