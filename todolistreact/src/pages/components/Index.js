@@ -21,6 +21,7 @@ const Index = () => {
   const token = sessionStorage.getItem("token");
   const user = JSON.parse(sessionStorage.getItem("user"));
   const detailsInput = React.useRef(null);
+  const [activeButton, setActiveButton] = useState("All");
 
   const fetchData = async (url) => {
     setIsLoading(true);
@@ -130,11 +131,43 @@ const Index = () => {
               onChange={(e) => selectState(e)}
             >
               <option>Choose a state</option>
-              <option value="http://localhost:8008/api/serve/index">All</option>
-              <option value="http://localhost:8008/api/serve/completed">
+              <option
+                value={`${
+                  activeButton == "All"
+                    ? "http://localhost:8008/api/serve/index"
+                    : activeButton == "Today"
+                    ? "http://localhost:8008/api/serve/todaytask"
+                    : activeButton == "Upcoming"
+                    ? "http://localhost:8008/api/serve/Upcoming"
+                    : ""
+                } `}
+              >
+                All
+              </option>
+              <option
+                value={`${
+                  activeButton == "All"
+                    ? "http://localhost:8008/api/serve/completed"
+                    : activeButton == "Today"
+                    ? "http://localhost:8008/api/serve/todayCompleted"
+                    : activeButton == "Upcoming"
+                    ? "http://localhost:8008/api/serve/upcomingCompleted"
+                    : ""
+                } `}
+              >
                 Completed
               </option>
-              <option value="http://localhost:8008/api/serve/inprocess">
+              <option
+                value={`${
+                  activeButton == "All"
+                    ? "http://localhost:8008/api/serve/inprocess"
+                    : activeButton == "Today"
+                    ? "http://localhost:8008/api/serve/todayInprocess"
+                    : activeButton == "Upcoming"
+                    ? "http://localhost:8008/api/serve/upcomingInprocess"
+                    : ""
+                } `}
+              >
                 In process
               </option>
             </select>
@@ -143,12 +176,45 @@ const Index = () => {
           <div className="inline-block ml-2">
             <a
               href="#"
-              className=" hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border hover:border-none "
-              onClick={(e) =>
-                fetchData("http://localhost:8008/api/serve/todaytask")
-              }
+              className={`hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border ${
+                activeButton == "All" ? "bg-gray-700 text-white" : ""
+              }`}
+              onClick={(e) => {
+                setActiveButton("All");
+                fetchData("http://localhost:8008/api/serve/index");
+              }}
+            >
+              All
+            </a>
+          </div>
+
+          <div className="inline-block ml-2">
+            <a
+              href="#"
+              className={` hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border ${
+                activeButton == "Today" ? "bg-gray-700 text-white" : ""
+              }`}
+              onClick={(e) => {
+                setActiveButton("Today");
+                fetchData("http://localhost:8008/api/serve/todaytask");
+              }}
             >
               Today&apos;s task
+            </a>
+          </div>
+
+          <div className="inline-block ml-2">
+            <a
+              href="#"
+              className={`hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium transition duration-300 ease-in-out border-gray-300 border ${
+                activeButton == "Upcoming" ? "bg-gray-700 text-white" : ""
+              }`}
+              onClick={(e) => {
+                setActiveButton("Upcoming");
+                fetchData("http://localhost:8008/api/serve/Upcoming");
+              }}
+            >
+              Upcoming
             </a>
           </div>
 
@@ -190,7 +256,14 @@ const Index = () => {
                 {todos.map((todo, index) => (
                   <tr
                     key={todo["id"]}
-                    className="hover:bg-green-50 transition duration-300 ease-in-out rounded-xl cursor-pointer"
+                    className={`hover:bg-green-50 transition duration-300 ease-in-out rounded-xl cursor-pointer ${
+                      todo.timeLeft < 10 && todo.state == 0 && "bg-red-300"
+                    } ${
+                      todo.timeLeft > 10 &&
+                      todo.state == 0 &&
+                      todo.timeLeft < 60 &&
+                      "bg-orange-300"
+                    }`}
                   >
                     {/* name */}
                     <td
@@ -204,7 +277,7 @@ const Index = () => {
 
                     {/* projectname */}
                     <td
-                      className="box-border border-b-2 border-gray-150  px-4 py-2 text-left rounded-l-lg sm:hidden md:table-cell"
+                      className="box-border border-b-2 border-gray-150  px-4 py-2 text-left sm:hidden md:table-cell"
                       onClick={() => {
                         detailsInput.current.checked = true;
                       }}

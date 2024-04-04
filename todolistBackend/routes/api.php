@@ -32,6 +32,8 @@ Route::get('serve/inprocess', [ApiTodoController::class, 'inProcess']);
 //
 Route::get('serve/todaytask', [ApiTodoController::class, 'getTodayTask']);
 //
+Route::get('serve/Upcoming', [ApiTodoController::class, 'getUpcomingTask']);
+//
 Route::post('serve/gettask', [ApiTodoController::class, 'getTaskName']);
 //
 Route::post('serve/getproject', [ApiTodoController::class, 'getProjectTask']);
@@ -40,11 +42,20 @@ Route::post('serve/getusertask', [ApiTodoController::class, 'getUserTask']);
 //
 Route::get('serve/search', [ApiTodoController::class, 'search']);
 //
+Route::get("serve/todayCompleted", [ApiTodoController::class, "todaycompleted"]);
+//
+Route::get("serve/upcomingCompleted", [ApiTodoController::class, "Upcomingcompleted"]);
+//
+Route::get("serve/todayInprocess", [ApiTodoController::class, "todayInProcess"]);
+//
+Route::get("serve/upcomingInprocess", [ApiTodoController::class, "UpcomingInProcess"]);
+//
 Route::get('serve/projects', [ApiProjectController::class, 'index']);
 //
 Route::post('serve/createProject', [ApiProjectController::class, 'store']);
 //
 Route::post('serve/deleteProject', [ApiProjectController::class, 'destroy']);
+//
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
