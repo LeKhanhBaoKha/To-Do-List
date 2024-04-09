@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
 import Check from "./function/check";
 import Details from "./function/details";
 import Edit from "./function/Edit";
@@ -13,13 +11,15 @@ import "./Index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 const Index = () => {
+  let token = sessionStorage.getItem("token");
+  let user = JSON.parse(sessionStorage.getItem("user"));
+
   const [todos, setTodos] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
   const [links, setLinks] = useState(null);
-  const token = sessionStorage.getItem("token");
-  const user = JSON.parse(sessionStorage.getItem("user"));
+
   const detailsInput = React.useRef(null);
   const [activeButton, setActiveButton] = useState("All");
 
@@ -41,22 +41,6 @@ const Index = () => {
       console.log("responseData", todoData);
       setTodos(todoData.data);
       setLinks(todoData);
-
-      const createResponse = await fetch(
-        "http://localhost:8008/api/serve/createData",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!createResponse.ok) {
-        throw new Error(
-          `Api request htmlFor projects failed with status ${createResponse.status}`
-        );
-      }
-      const CreateData = await createResponse.json();
-      setData(CreateData);
     } catch (error) {
       setError(error.message);
       console.log(todos);
@@ -65,16 +49,60 @@ const Index = () => {
     }
   };
 
+  const fetchCreateData = React.useCallback(async () => {
+    const createResponse = await fetch(
+      "http://localhost:8008/api/serve/createData",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!createResponse.ok) {
+      throw new Error(
+        `Api request htmlFor projects failed with status ${createResponse.status}`
+      );
+    }
+    const CreateData = await createResponse.json();
+    setData(CreateData);
+  }, [token]);
+
   function selectState(event) {
     var url = event.target.value;
     fetchData(url);
   }
+
+  const refreshToken = async () => {
+    setError(null);
+    try {
+      const refreshTokenResponse = await fetch(
+        "http://localhost:8008/api/refresh",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!refreshTokenResponse.ok) {
+        throw new Error(
+          `Api request failed with status ${refreshTokenResponse.status}`
+        );
+      }
+      const refreshToken = await refreshTokenResponse.json();
+      console.log("refreshToken", refreshToken);
+      token = sessionStorage.setItem("token", refreshToken.authorisation.token);
+    } catch (error) {
+      setError(error.message);
+      console.log(refreshToken);
+    }
+  };
 
   const fetchInitialData = async () => {
     sessionStorage.setItem(
       "current_page",
       "http://localhost:8008/api/serve/index"
     );
+    await fetchCreateData();
     await fetchData("http://localhost:8008/api/serve/index");
   };
 

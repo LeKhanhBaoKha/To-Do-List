@@ -8,7 +8,7 @@ function Paging({ links, fetchData }) {
       fetchData(links["links"][value]["url"]);
       setPage(value);
       sessionStorage.setItem("current_page", links["links"][value]["url"]);
-    }, 150); // 150 milliseconds = 0.15 seconds
+    }, 150);
     return () => clearTimeout(timeoutId);
   };
   return (
