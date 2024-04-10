@@ -107,8 +107,21 @@ const Index = () => {
   };
 
   useEffect(() => {
+    //fetch the todo list
     fetchInitialData();
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refreshToken();
+      console.log("token refresh", token);
+    }, 55 * 60 * 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   if (error) {
     return (
       <div className="container mx-auto flex items-center justify-center h-[80vh]">
